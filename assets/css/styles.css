@@ -1,0 +1,159 @@
+.container {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    height: auto;
+}
+
+/* <=== NAV ===> */
+nav {
+    background: #7cee8bc9;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    list-style: none;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* <=== MAIN ===> */
+main {
+    background-color: #ffffff;
+}
+
+#hero {  
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+}
+
+#hero .logo {
+  width: 300px;       
+  margin: 40px auto 20px;
+  display: block;
+}
+
+#hero h1 {
+    margin: 20px 0 5px;
+}
+
+#hero p {
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+
+#destacados {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    gap: 20px;              
+    max-width: 1000px;      
+    margin: 40px auto 0px;
+    padding: 0 10px;
+}
+
+#destacados-titulo {
+  margin: 60px auto 30px;    
+  padding: 8px 16px;          
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  max-width: max-content;      
+  border-top: 2px solid #e5e5e5;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+#productos-titulo {
+  margin: auto auto 0px;   
+  padding: 8px 16px;           
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  max-width: max-content;      
+}
+
+#contactos-titulo {
+  margin: auto auto 0px;   
+  padding: 8px 16px;           
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  max-width: max-content;      
+}
+
+#productos {
+    display: grid;
+    grid-template-columns: 450px 450px;
+    justify-content: center;
+    gap: 100px;
+}
+
+#productos label { 
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: 10px;
+}
+
+.producto {
+    display: flex;
+    flex-direction: column;
+    background-color: #def0e4;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+#filtro {   
+    padding-bottom: 16px;   
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: auto;
+    margin: 0;
+    gap: 10px
+}
+
+/* === FOOTER === */
+footer {
+  background: #7cee8bc9;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  padding: 5px;
+  margin-top: 40px;
+  border-top: 1px solid #ddd
+}
+
