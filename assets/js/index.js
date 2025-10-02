@@ -20,10 +20,11 @@ function tarjetaDestacada(p) {                          // para crear la tarjeta
     <h3>${p.nombre}</h3>
     <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $${p.precio.toLocaleString("es-AR")}</p>
-    <label>
+
+    <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
       <button type="button" class="btnCarrito">Agregar al carrito</button>
-    </label> <br>
+    </div>
     `;
   return art;
 }

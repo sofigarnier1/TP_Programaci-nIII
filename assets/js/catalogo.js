@@ -1,7 +1,5 @@
 import { productos } from "./data.js";
 
-const $ = (s) => document.querySelector(s);
-
 function crearTarjeta(p) {
   const el = document.createElement('div');
   el.className = 'producto';
@@ -9,12 +7,13 @@ function crearTarjeta(p) {
     <h3>${p.nombre}</h3>
     <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
-    <label>
+
+    <div class="botones">
       <a href="producto.html?id=${p.id}">
         <button type="button">Ver detalles</button>
       </a>
       <button type="button">Agregar al carrito</button>
-    </label>
+    </div>
   `;
   return el;
 }
