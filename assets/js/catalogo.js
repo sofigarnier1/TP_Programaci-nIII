@@ -1,4 +1,8 @@
-import { productos } from "./data.js";
+import { productos as datosProductos } from "./data.js";
+import { initCarrito } from "./carrito.js";
+
+let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+localStorage.setItem("productos", JSON.stringify(productos));
 
 function crearTarjeta(p) {
   const el = document.createElement('div');
@@ -39,6 +43,8 @@ function initCatalogo() {
   const sel = document.getElementById("categoria");
   if (btn) btn.addEventListener('click', aplicarFiltro);
   if (sel) sel.addEventListener('change', aplicarFiltro);
+
+  document.addEventListener("DOMContentLoaded", () => { initCarrito(); });
 }
 
 if (document.readyState === 'loading') {

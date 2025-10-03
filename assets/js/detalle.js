@@ -1,4 +1,8 @@
-import { productos } from './data.js';
+import { productos as datosProductos } from './data.js';
+import { initCarrito } from "./carrito.js";
+
+let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+localStorage.setItem("productos", JSON.stringify(productos));
 
 function renderizarProducto(p) {
   const cont = document.getElementById("detalleProducto");
@@ -52,6 +56,9 @@ function agregarProducto(p, btn) {
   if (p.stock > 0) {
     p.stock--;
     stockEl.textContent = p.stock;
+    agregarACarrito(p);
+    productos = productos.map(prod => prod.id === p.id ? p : prod);
+    localStorage.setItem("productos", JSON.stringify(productos));
     alert(`Se agregó ${p.nombre} al carrito.`);
   }
 
@@ -59,6 +66,24 @@ function agregarProducto(p, btn) {
     btn.disabled = true;
     btn.textContent = "Sin stock";
   }
+}
+
+function agregarACarrito(producto) {
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];  // recupera el carrito desde localStorage
+
+  const item = carrito.find(prod => prod.id === producto.id);       // busca si el producto ya existe en el carrito
+  if (item) {             
+    item.cantidad += 1;
+  } else {
+    carrito.push({
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      cantidad: 1
+    })
+  }
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+  actualizarBadge();
 }
 
 function initProducto() {
@@ -70,6 +95,8 @@ function initProducto() {
   if (!producto) return;
 
   renderizarProducto(producto);
+
+  document.addEventListener("DOMContentLoaded", () => { initCarrito(); });
 }
 
 if (document.readyState === 'loading') {

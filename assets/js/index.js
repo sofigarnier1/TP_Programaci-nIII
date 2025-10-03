@@ -1,4 +1,8 @@
-import { productos } from "./data.js";
+import { productos as datosProductos } from "./data.js";
+import { initCarrito } from "./carrito.js";
+
+let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+localStorage.setItem("productos", JSON.stringify(productos));
 
 function tomarAleatorios(producto, n = 2) {
   const src = [...producto];                            // crea una copia del array
@@ -36,6 +40,8 @@ function initIndex() {
   const destacados = tomarAleatorios(productos, 2);                  // se seleccionan dos elementos aleatorios del array productos
   cont.innerHTML = "";                                               // vacía el contenido de div#destacados
   destacados.forEach(p => cont.appendChild(tarjetaDestacada(p)));    // para cada elemento de destacados, devuelve la estructura del producto
-}                                                                    // con appendChild mete la tarjeta en #destacados
+                                                                     // con appendChild mete la tarjeta en #destacados
+  document.addEventListener("DOMContentLoaded", () => { initCarrito(); });
+}                                                                   
 
 document.addEventListener("DOMContentLoaded", initIndex);
