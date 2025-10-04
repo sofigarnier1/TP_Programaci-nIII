@@ -1,82 +1,138 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="../assets/img/sbicon.ico">
-  <link rel="stylesheet" href="../assets/css/styles.css">
-  <link rel="stylesheet" href="../assets/css/carrito.css">
-  <title>Carrito | Sabina Accesorios</title>
-</head>
-<body>
-  <div class="page">
+document.addEventListener("DOMContentLoaded", mostrarCarrito);
 
-    <header>
-      <nav>
-        <div class="bar-inner">
-          <ul>
-            <li><a href="../index.html">Inicio</a></li>
-            <li><a href="productos.html">Productos</a></li>
-            <li><a href="contactos.html">Contactos</a></li>
-            <li><a href="carrito.html" id="nav-cart">🛒 (0)</a></li>
-          </ul>
-        </div>
-      </nav>
-    </header>
+// === Utils ===
+function readCart() {
+  try { return JSON.parse(localStorage.getItem("carrito") || "[]"); }
+  catch { return []; }
+}
+function writeCart(items) {
+  localStorage.setItem("carrito", JSON.stringify(items));
+}
+function money(n){ try { return Number(n||0).toLocaleString("es-AR"); } catch { return n; } }
 
-    <main>
-      <section id="hero" class="container">
-        <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
-      </section>
+function updateBadges(items){
+  const count = items.reduce((a, it) => a + Number(it.cantidad||1), 0);
+  const nav = document.getElementById("nav-cart");
+  if (nav) nav.textContent = `🛒 (${count})`;
+  const badge = document.getElementById("badgeCarrito");
+  if (badge) badge.textContent = count;
+}
 
-      <section class="carrito-wrap container">
-        <h1>Tu carrito</h1>
+// === API pública ===
+function agregarAlCarrito(prod){
+  // prod: { id, nombre, precio (number), img }
+  const cart = readCart();
+  const idx = cart.findIndex(i => String(i.id) === String(prod.id));
+  if (idx >= 0) {
+    cart[idx].cantidad = Number(cart[idx].cantidad || 1) + 1;
+  } else {
+    cart.push({
+      id: prod.id,
+      nombre: prod.nombre,
+      precio: Number(prod.precio) || 0,
+      img: prod.img || "",
+      cantidad: 1
+    });
+  }
+  writeCart(cart);
+  updateBadges(cart);
+}
 
-        <div class="carrito-grid">
-          <div class="tabla-card">
-            <table class="tabla">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th class="num">Precio</th>
-                  <th class="center">Cantidad</th>
-                  <th class="num">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody id="cart-body"></tbody>
-            </table>
+function actualizarBadge() { updateBadges(readCart()); }
 
-            <div id="cart-empty" class="vacio" hidden>
-              Tu carrito está vacío.
-            </div>
+function initCarrito() {
+  actualizarBadge();
+  window.addEventListener("storage", (e) => {
+    if (e.key === "carrito") actualizarBadge();
+  });
+}
+
+// === Render versión SIMPLE (div#contCarrito) ===
+function mostrarCarrito() {
+  const cont = document.getElementById("contCarrito");
+  if (!cont) return; // si no existe, no renderizamos esta versión
+
+  const carrito = readCart();
+  cont.innerHTML = "";
+
+  if (carrito.length === 0) {
+    cont.innerHTML = "<p>Tu carrito está vacío.</p>"; // <-- typo corregido
+    return;
+  }
+
+  carrito.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "itemCarrito";
+    div.innerHTML = `
+      <h3>${item.nombre}</h3>
+      <p>Precio: $ ${money(item.precio)}</p>
+      <p>Cantidad: ${item.cantidad}</p>
+    `;
+    cont.appendChild(div);
+  });
+
+  const total = carrito.reduce((acc, item) => acc + Number(item.precio||0) * Number(item.cantidad||1), 0);
+  const pTotal = document.createElement("p");
+  pTotal.innerHTML = `<strong>Total</strong>: $ ${money(total)}`;
+  cont.appendChild(pTotal);
+}
+
+// === Render versión TABLA (tbody#cart-body + resumen) ===
+function renderCart(){
+  const tbody = document.getElementById("cart-body");
+  const vacio = document.getElementById("cart-empty");
+  const itemsEl = document.getElementById("resumen-items");
+  const totalEl = document.getElementById("resumen-total");
+
+  // Si no están estos nodos, no es la versión tabla
+  if (!tbody || !vacio || !itemsEl || !totalEl) return;
+
+  const cart = readCart();
+  updateBadges(cart);
+
+  if (!cart.length){
+    tbody.innerHTML = "";
+    vacio.hidden = false;
+    itemsEl.textContent = "0";
+    totalEl.textContent = "$ 0";
+    return;
+  }
+  vacio.hidden = true;
+
+  tbody.innerHTML = cart.map((p) => {
+  const precio = Number(p.precio)||0;
+  const qty = Number(p.cantidad||1);
+  const subtotal = precio * qty;
+  return `
+    <tr>
+      <td>
+        <div class="prod">
+          <img src="${p.img || '../assets/img/placeholder.png'}" alt="${p.nombre || 'Producto'}">
+          <div>
+            <div class="name">${p.nombre || 'Producto'}</div>
           </div>
-
-          <aside class="resumen-card">
-            <h2>Resumen</h2>
-            <div class="resumen-row">
-              <span>Items:</span>
-              <strong id="resumen-items">0</strong>
-            </div>
-            <div class="resumen-row">
-              <span>Total:</span>
-              <strong id="resumen-total">$ 0</strong>
-            </div>
-
-            <div class="resumen-actions">
-              <a class="btn btn-sec" href="productos.html">Seguir comprando</a>
-            </div>
-          </aside>
         </div>
-      </section>
-    </main>
+      </td>
+      <td class="num">$ ${money(precio)}</td>
+      <td class="center">${qty}</td>
+      <td class="num"><strong>$ ${money(subtotal)}</strong></td>
+    </tr>
+  `;
+}).join("");
 
-    <footer>
-      <div class="bar-inner">
-        <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
-      </div>
-    </footer>
-  </div>
 
-  <script type="module" src="../assets/js/carrito.js?v=3"></script>
-</body>
-</html>
+  const itemsCount = cart.reduce((acc, it) => acc + Number(it.cantidad||1), 0);
+  const total = cart.reduce((acc, it) => acc + (Number(it.precio)||0) * Number(it.cantidad||1), 0);
+  itemsEl.textContent = String(itemsCount);
+  totalEl.textContent = `$ ${money(total)}`;
+}
+
+// === Boot ===
+document.addEventListener("DOMContentLoaded", () => {
+  initCarrito();
+  mostrarCarrito(); // render simple si existe #contCarrito
+  renderCart();     // render tabla si existen nodos de tabla
+});
+
+// Export para usar desde catálogo o detalle
+export { initCarrito, agregarAlCarrito };
