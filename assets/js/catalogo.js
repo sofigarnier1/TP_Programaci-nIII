@@ -1,18 +1,36 @@
+// catalogo.js
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
+// --- Datos ---
 let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-// Aseguro precio numérico para evitar NaN al calcular totales
-productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
+
+// Aseguramos tipos y normalizamos categoría para que el filtro no falle por mayúsculas/acentos
+function normalizarCategoria(v) {
+  return String(v || "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // saca acentos
+    .toLowerCase().trim();
+}
+
+productos = productos.map(p => ({
+  ...p,
+  precio: Number(p.precio) || 0,
+  categoria: normalizarCategoria(p.categoria)
+}));
+
 localStorage.setItem("productos", JSON.stringify(productos));
 
-function crearTarjeta(p) {  // crea una tarjeta de producto
+// --- Render de tarjeta ---
+function crearTarjeta(p) {
   const art = document.createElement("div");
   art.className = "producto";
-  art.dataset.id = p.id; // <- ID para clicks
+  art.dataset.id = p.id;
+
+  const imgSrc = p.img || "assets/img/placeholder.png";
+
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
+    <img src="${imgSrc}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -22,31 +40,44 @@ function crearTarjeta(p) {  // crea una tarjeta de producto
   return art;
 }
 
+// --- Render catálogo ---
 function renderCatalogo(lista) {
   const cont = document.getElementById("productos");
   if (!cont) return;
   cont.innerHTML = "";
+  if (!Array.isArray(lista) || !lista.length) {
+    cont.innerHTML = <p>No hay productos para la categoría seleccionada.</p>;
+    return;
+  }
   lista.forEach(p => cont.appendChild(crearTarjeta(p)));
 }
 
+// --- Filtro ---
 function aplicarFiltro() {
   const sel = document.getElementById("categoria");
   const valor = sel ? sel.value : "all";
-  const lista = (valor === "all") ? productos : productos.filter(p => p.categoria === valor);
+
+  // normalizamos el valor del select para comparar contra p.categoria normalizada
+  const vNorm = normalizarCategoria(valor);
+  const lista = (vNorm === "all")
+    ? productos
+    : productos.filter(p => p.categoria === vNorm);
+
   renderCatalogo(lista);
 }
 
+// --- Init ---
 function initCatalogo() {
-  // 1) Render inicial
-  renderCatalogo(productos);
-
-  // 2) Filtros
+  // Eventos de filtro
   const btn = document.getElementById("aplicar");
   const sel = document.getElementById("categoria");
   if (btn) btn.addEventListener("click", aplicarFiltro);
   if (sel) sel.addEventListener("change", aplicarFiltro);
 
-  // 3) Delegación de clicks (agregar al carrito / ver detalles)
+  // Render inicial respetando el valor actual del select (por si no es "all")
+  aplicarFiltro();
+
+  // Delegación de clicks (agregar al carrito / ver detalles)
   const cont = document.getElementById("productos");
   if (cont) {
     cont.addEventListener("click", (e) => {
@@ -60,32 +91,34 @@ function initCatalogo() {
         agregarAlCarrito({
           id: prod.id,
           nombre: prod.nombre,
-          precio: prod.precio,  // ya es número
+          precio: prod.precio,
           img: prod.img
         });
-        return; // evitamos seguir evaluando para este click
+        return;
       }
 
-      // Ver detalles
+      // Ver detalles (ajustado para GitHub Pages)
       const detBtn = e.target.closest(".btnDetalle");
       if (detBtn) {
         const card = detBtn.closest(".producto");
         const id = card?.dataset.id;
         if (id) {
-          // Si esta página está en /pages/, el detalle también:
-          location.href = `producto.html?id=${id}`;
+          // Con <base href="/TP_Programaci-nIII/"> y estando en /pages/productos.html,
+          // apuntamos a la página de detalle ubicada en /pages/detalle.html
+          location.href = pages/detalle.html?id=${encodeURIComponent(id)};
         }
       }
     });
   }
 
-  // 4) Contador del nav
+  // Badge del nav
   initCarrito();
 }
 
-// Boot
+// --- Boot ---
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCatalogo);
 } else {
   initCatalogo();
 }
+
