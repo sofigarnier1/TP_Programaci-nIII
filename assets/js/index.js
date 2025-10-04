@@ -19,7 +19,7 @@ function tomarAleatorios(arr, n = 2) {
 function tarjetaDestacada(p) {
   const art = document.createElement("div");
   art.className = "producto";
-  art.dataset.id = p.id; // <-- para usar en el click
+  art.dataset.id = p.id;
   art.innerHTML = `
     <h3>${p.nombre}</h3>
     <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
@@ -40,7 +40,6 @@ function initIndex() {
   cont.innerHTML = "";
   destacados.forEach(p => cont.appendChild(tarjetaDestacada(p)));
 
-  // 🔹 Delegación de clicks: agregar al carrito / ver detalles
   cont.addEventListener("click", (e) => {
     const btnAdd = e.target.closest(".btnCarrito");
     if (btnAdd) {
@@ -56,16 +55,14 @@ function initIndex() {
       });
       return;
     }
-
     const btnDet = e.target.closest(".btnDetalle");
     if (btnDet) {
       const card = btnDet.closest(".producto");
       const id = card?.dataset.id;
-      if (id) location.href = `/pages/producto.html?id=${id}`;
+      if (id) location.href = pages/detalle.html?id=${id};
     }
   });
 
-  // contador del nav
   initCarrito();
 }
 
