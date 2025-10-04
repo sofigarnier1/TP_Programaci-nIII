@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="../assets/img/sbicon.ico">
-  <link rel="stylesheet" href="../assets/css/styles.css" />
-  <link rel="stylesheet" href="../assets/css/carrito.css" />
+
+  <!-- Ancla todas las rutas relativas al repo en GitHub Pages -->
+  <base href="/TP_Programaci-nIII/">
+
+  <!-- Assets -->
+  <link rel="icon" href="assets/img/sbicon.ico">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/carrito.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <title>Carrito | Sabina Accesorios</title>
 </head>
@@ -17,10 +22,10 @@
       <nav>
         <div class="bar-inner">
           <ul>
-            <li><a href="/index.html">Inicio</a></li>
-            <li><a href="/pages/productos.html">Productos</a></li>
-            <li><a href="/pages/contactos.html">Contactos</a></li>
-            <li><a href="/pages/carrito.html" id="nav-cart">(0)</a></li>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="pages/productos.html">Productos</a></li>
+            <li><a href="pages/contactos.html">Contactos</a></li>
+            <li><a href="pages/carrito.html" id="nav-cart">(0)</a></li>
           </ul>
         </div>
       </nav>
@@ -29,7 +34,7 @@
     <!-- CONTENIDO -->
     <main>
       <section id="hero" class="container">
-        <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
+        <img class="logo" src="assets/img/4.png" alt="Logo Sabina Accesorios">
       </section>
       
       <section class="carrito-wrap container">
@@ -68,7 +73,7 @@
             </div>
 
             <div class="resumen-actions">
-              <a class="btn btn-sec" href="/pages/productos.html">Seguir comprando</a>
+              <a class="btn btn-sec" href="pages/productos.html">Seguir comprando</a>
             </div>
           </aside>
         </div>
@@ -84,6 +89,6 @@
   </div>
 
   <!-- Script del carrito -->
-  <script type="module" src="../assets/js/carrito.js"></script>
+  <script type="module" src="assets/js/carrito.js"></script>
 </body>
 </html>
