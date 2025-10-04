@@ -1,5 +1,3 @@
-document.addEventListener("DOMContentLoaded", mostrarCarrito);
-
 // === Utils ===
 function readCart() {
   try { return JSON.parse(localStorage.getItem("carrito") || "[]"); }
@@ -13,7 +11,7 @@ function money(n){ try { return Number(n||0).toLocaleString("es-AR"); } catch { 
 function updateBadges(items){
   const count = items.reduce((a, it) => a + Number(it.cantidad||1), 0);
   const nav = document.getElementById("nav-cart");
-  if (nav) nav.textContent = `🛒 (${count})`;
+  if (nav) nav.textContent = 🛒 (${count});
   const badge = document.getElementById("badgeCarrito");
   if (badge) badge.textContent = count;
 }
@@ -56,7 +54,7 @@ function mostrarCarrito() {
   cont.innerHTML = "";
 
   if (carrito.length === 0) {
-    cont.innerHTML = "<p>Tu carrito está vacío.</p>"; // <-- typo corregido
+    cont.innerHTML = "<p>Tu carrito está vacío.</p>";
     return;
   }
 
@@ -73,7 +71,7 @@ function mostrarCarrito() {
 
   const total = carrito.reduce((acc, item) => acc + Number(item.precio||0) * Number(item.cantidad||1), 0);
   const pTotal = document.createElement("p");
-  pTotal.innerHTML = `<strong>Total</strong>: $ ${money(total)}`;
+  pTotal.innerHTML = <strong>Total</strong>: $ ${money(total)};
   cont.appendChild(pTotal);
 }
 
@@ -100,31 +98,30 @@ function renderCart(){
   vacio.hidden = true;
 
   tbody.innerHTML = cart.map((p) => {
-  const precio = Number(p.precio)||0;
-  const qty = Number(p.cantidad||1);
-  const subtotal = precio * qty;
-  return `
-    <tr>
-      <td>
-        <div class="prod">
-          <img src="${p.img || '../assets/img/placeholder.png'}" alt="${p.nombre || 'Producto'}">
-          <div>
-            <div class="name">${p.nombre || 'Producto'}</div>
+    const precio = Number(p.precio)||0;
+    const qty = Number(p.cantidad||1);
+    const subtotal = precio * qty;
+    return `
+      <tr>
+        <td>
+          <div class="prod">
+            <img src="${p.img || 'assets/img/placeholder.png'}" alt="${p.nombre || 'Producto'}">
+            <div>
+              <div class="name">${p.nombre || 'Producto'}</div>
+            </div>
           </div>
-        </div>
-      </td>
-      <td class="num">$ ${money(precio)}</td>
-      <td class="center">${qty}</td>
-      <td class="num"><strong>$ ${money(subtotal)}</strong></td>
-    </tr>
-  `;
-}).join("");
-
+        </td>
+        <td class="num">$ ${money(precio)}</td>
+        <td class="center">${qty}</td>
+        <td class="num"><strong>$ ${money(subtotal)}</strong></td>
+      </tr>
+    `;
+  }).join("");
 
   const itemsCount = cart.reduce((acc, it) => acc + Number(it.cantidad||1), 0);
   const total = cart.reduce((acc, it) => acc + (Number(it.precio)||0) * Number(it.cantidad||1), 0);
   itemsEl.textContent = String(itemsCount);
-  totalEl.textContent = `$ ${money(total)}`;
+  totalEl.textContent = $ ${money(total)};
 }
 
 // === Boot ===
@@ -134,5 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCart();     // render tabla si existen nodos de tabla
 });
 
-// Export para usar desde catálogo o detalle
+// Export para usar desde catálogo o detalle (ESM) y también en window (HTML inline)
 export { initCarrito, agregarAlCarrito };
+window.initCarrito = initCarrito;
+window.agregarAlCarrito = agregarAlCarrito;
