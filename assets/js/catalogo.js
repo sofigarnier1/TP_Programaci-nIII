@@ -4,6 +4,7 @@ import { initCarrito, agregarAlCarrito } from "./carrito.js?v=3";
 let cache;
 try { cache = JSON.parse(localStorage.getItem("productos") || "[]"); } catch { cache = []; }
 let productos = Array.isArray(cache) && cache.length ? cache : datosProductos.slice();
+
 function normalizarCategoria(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();}
 productos = productos.map(p=>({ ...p, precio:Number(p.precio)||0, stock:Number(p.stock)||0, categoria:normalizarCategoria(p.categoria)}));
 if (!(Array.isArray(cache) && cache.length)) localStorage.setItem("productos", JSON.stringify(productos));
@@ -70,3 +71,4 @@ function initCatalogo(){
 }
 
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initCatalogo);}else{initCatalogo();}
+
