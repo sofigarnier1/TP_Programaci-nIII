@@ -3,9 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" href="./assets/img/sbicon.ico" />
-  <link rel="stylesheet" href="./assets/css/styles.css" />
+
+  <!-- Hace que TODAS las rutas relativas se resuelvan desde el repo en GitHub Pages -->
+  <base href="/TP_Programaci-nIII/">
+
+  <!-- Assets (ya no usan ./ ni ../ gracias al <base>) -->
+  <link rel="icon" href="assets/img/sbicon.ico" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
   <title>Inicio | Sabina Accesorios</title>
 </head>
 <body>
@@ -16,10 +22,10 @@
       <nav>
         <div class="bar-inner">
           <ul>
-            <li><a href="/TP_Programaci-nIII/index.html">Inicio</a></li>
-            <li><a href="/TP_Programaci-nIII/pages/productos.html">Productos</a></li>
-            <li><a href="/TP_Programaci-nIII/pages/contactos.html">Contactos</a></li>
-            <li><a href="/TP_Programaci-nIII/pages/carrito.html" id="nav-cart">🛒 (0)</a></li>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="pages/productos.html">Productos</a></li>
+            <li><a href="pages/contactos.html">Contactos</a></li>
+            <li><a href="pages/carrito.html" id="nav-cart">🛒 (0)</a></li>
           </ul>
         </div>
       </nav>
@@ -28,7 +34,7 @@
     <!-- CONTENIDO -->
     <main>
       <section id="hero" class="container">
-        <img class="logo" src="./assets/img/3.png" alt="Logo Sabina Accesorios">
+        <img class="logo" src="assets/img/3.png" alt="Logo Sabina Accesorios">
         <h1>Bienvenidos a Sabina Accesorios</h1>
         <p>Accesorios que acompañan tu <strong>look 💋</strong></p>
       </section>
@@ -49,7 +55,7 @@
   </div>
 
   <!-- Script del inicio -->
-  <script type="module" src="./assets/js/index.js"></script>
+  <script type="module" src="assets/js/index.js"></script>
 </body>
 </html>
 
