@@ -1,58 +1,50 @@
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-function normalizar(v){
-  return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
+localStorage.setItem("productos", JSON.stringify(productos));
+
+const IMG_BASE = location.pathname.includes("/pages/") ? "../assets/img/" : "assets/img/";
+function imgSrc(path) {
+  if (!path) return "";
+  if (/^https?:\/\//i.test(path)) return path;
+  if (path.includes("assets/")) return path;
+  return IMG_BASE + path.replace(/^\.?\/?assets\/img\//, "");
 }
 
-let cache;
-try { cache = JSON.parse(localStorage.getItem("productos") || "[]"); } catch { cache = []; }
-let productos = Array.isArray(cache) && cache.length ? cache : datosProductos.slice();
-productos = productos.map(p => ({
-  ...p,
-  precio: Number(p.precio) || 0,
-  stock: Number(p.stock) || 0,
-  categoria: normalizar(p.categoria),
-  img: p.img || "assets/img/placeholder.png"
-}));
-if (!(Array.isArray(cache) && cache.length)) localStorage.setItem("productos", JSON.stringify(productos));
-
-function crearTarjeta(p){
-  const el = document.createElement("div");
-  el.className = "producto";
-  el.dataset.id = p.id;
-  el.innerHTML = `
+function crearTarjeta(p) {
+  const art = document.createElement("div");
+  art.className = "producto";
+  art.dataset.id = p.id;
+  art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
-    <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
+    <img src="${imgSrc(p.img)}" alt="${p.nombre}" height="400" width="400">
+    <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
       <button type="button" class="btnCarrito">Agregar al carrito</button>
-    </div>`;
-  return el;
+    </div>
+  `;
+  return art;
 }
 
-function render(lista){
+function renderCatalogo(lista) {
   const cont = document.getElementById("productos");
   if (!cont) return;
   cont.innerHTML = "";
-  if (!lista.length){
-    cont.innerHTML = <p>No hay productos para la categoría seleccionada.</p>;
-    return;
-  }
   lista.forEach(p => cont.appendChild(crearTarjeta(p)));
 }
 
-function aplicarFiltro(){
+function aplicarFiltro() {
   const sel = document.getElementById("categoria");
-  const val = sel ? normalizar(sel.value || "all") : "all";
-  const lista = (val === "all") ? productos : productos.filter(p => p.categoria === val);
-  render(lista);
+  const valor = sel ? sel.value : "all";
+  const lista = valor === "all" ? productos : productos.filter(p => p.categoria === valor);
+  renderCatalogo(lista);
 }
 
-function init(){
-  // primer render (respeta el valor actual del select)
-  aplicarFiltro();
+function initCatalogo() {
+  renderCatalogo(productos);
 
   const btn = document.getElementById("aplicar");
   const sel = document.getElementById("categoria");
@@ -60,19 +52,28 @@ function init(){
   if (sel) sel.addEventListener("change", aplicarFiltro);
 
   const cont = document.getElementById("productos");
-  if (cont){
+  if (cont) {
     cont.addEventListener("click", (e) => {
-      const add = e.target.closest(".btnCarrito");
-      if (add){
-        const id = add.closest(".producto")?.dataset.id;
+      const addBtn = e.target.closest(".btnCarrito");
+      if (addBtn) {
+        const card = addBtn.closest(".producto");
+        const id = card?.dataset.id;
         const prod = productos.find(x => String(x.id) === String(id));
-        if (prod) agregarAlCarrito({ id: prod.id, nombre: prod.nombre, precio: prod.precio, img: prod.img });
+        if (!prod) return;
+        agregarAlCarrito({
+          id: prod.id,
+          nombre: prod.nombre,
+          precio: Number(prod.precio) || 0,
+          img: prod.img
+        });
         return;
       }
-      const det = e.target.closest(".btnDetalle");
-      if (det){
-        const id = det.closest(".producto")?.dataset.id;
-        if (id) location.href = pages/detalle.html?id=${encodeURIComponent(id)};
+
+      const detBtn = e.target.closest(".btnDetalle");
+      if (detBtn) {
+        const card = detBtn.closest(".producto");
+        const id = card?.dataset.id;
+        if (id) location.href = `producto.html?id=${id}`;
       }
     });
   }
@@ -81,9 +82,8 @@ function init(){
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
+  document.addEventListener("DOMContentLoaded", initCatalogo);
 } else {
-  init();
+  initCatalogo();
 }
-
 
