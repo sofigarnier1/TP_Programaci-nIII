@@ -33,7 +33,7 @@ function renderizarProducto(p) {
 
   const btnVolver = document.createElement("a");
   btnVolver.href = "./productos.html";
-  btnVolver.innerHTML = <button type="button">Volver al catálogo</button>;
+  btnVolver.innerHTML = `<button type="button">Volver al catálogo</button>`;
 
   divBotones.appendChild(btnAgregar);
   divBotones.appendChild(btnVolver);
@@ -59,7 +59,7 @@ function agregarProducto(p, btn) {
     agregarACarrito(p);
     productos = productos.map(prod => prod.id === p.id ? p : prod);
     localStorage.setItem("productos", JSON.stringify(productos));
-    alert(Se agregó ${p.nombre} al carrito.);
+    alert(`Se agregó ${p.nombre} al carrito.`);
   }
 
   if (p.stock === 0) {
