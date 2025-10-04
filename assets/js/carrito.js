@@ -1,4 +1,3 @@
-// === Utils ===
 function readCart() {
   try { return JSON.parse(localStorage.getItem("carrito") || "[]"); }
   catch { return []; }
@@ -16,9 +15,7 @@ function updateBadges(items){
   if (badge) badge.textContent = count;
 }
 
-// === API pública ===
 function agregarAlCarrito(prod){
-  // prod: { id, nombre, precio (number), img }
   const cart = readCart();
   const idx = cart.findIndex(i => String(i.id) === String(prod.id));
   if (idx >= 0) {
@@ -45,7 +42,6 @@ function initCarrito() {
   });
 }
 
-// === Render versión SIMPLE (div#contCarrito) ===
 function mostrarCarrito() {
   const cont = document.getElementById("contCarrito");
   if (!cont) return; // si no existe, no renderizamos esta versión
@@ -75,14 +71,12 @@ function mostrarCarrito() {
   cont.appendChild(pTotal);
 }
 
-// === Render versión TABLA (tbody#cart-body + resumen) ===
 function renderCart(){
   const tbody = document.getElementById("cart-body");
   const vacio = document.getElementById("cart-empty");
   const itemsEl = document.getElementById("resumen-items");
   const totalEl = document.getElementById("resumen-total");
 
-  // Si no están estos nodos, no es la versión tabla
   if (!tbody || !vacio || !itemsEl || !totalEl) return;
 
   const cart = readCart();
@@ -124,14 +118,14 @@ function renderCart(){
   totalEl.textContent = $ ${money(total)};
 }
 
-// === Boot ===
 document.addEventListener("DOMContentLoaded", () => {
   initCarrito();
-  mostrarCarrito(); // render simple si existe #contCarrito
-  renderCart();     // render tabla si existen nodos de tabla
+  mostrarCarrito(); 
+  renderCart();     
 });
 
 // Export para usar desde catálogo o detalle (ESM) y también en window (HTML inline)
 export { initCarrito, agregarAlCarrito };
 window.initCarrito = initCarrito;
 window.agregarAlCarrito = agregarAlCarrito;
+
