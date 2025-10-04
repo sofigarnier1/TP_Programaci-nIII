@@ -1,13 +1,7 @@
-import { productos as datosProductos } from "./data.js";
-import { initCarrito, agregarAlCarrito } from "./carrito.js";
+import { productos as datosProductos } from './data.js';
+import { initCarrito } from "./carrito.js";
 
 let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-
-productos = productos.map(p => ({
-  ...p,
-  precio: Number(p.precio) || 0,
-  stock: Number(p.stock) || 0
-}));
 localStorage.setItem("productos", JSON.stringify(productos));
 
 function renderizarProducto(p) {
@@ -20,15 +14,13 @@ function renderizarProducto(p) {
   art.className = "producto";
   art.dataset.id = p.id;
 
-  const imgSrc = p.img || "assets/img/placeholder.png";
-
   art.innerHTML = `
-    <h3>${p.nombre}</h3>
-    <img src="${imgSrc}" alt="${p.nombre}" height="400" width="400">
-    <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
-    <p><strong>Material:</strong> ${p.descripcion}</p>
-    <p><strong>Categoría:</strong> ${p.categoria}</p>
-    <p><strong>Stock:</strong> <span class="stock">${p.stock}</span></p>
+      <h3>${p.nombre}</h3>
+      <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
+      <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
+      <p><strong>Material:</strong> ${p.descripcion}</p>
+      <p><strong>Categoría:</strong> ${p.categoria}</p>
+      <p><strong>Stock:</strong> <span class="stock">${p.stock}</span></p>
   `;
 
   const divBotones = document.createElement("div");
@@ -40,8 +32,7 @@ function renderizarProducto(p) {
   btnAgregar.textContent = "Agregar al carrito";
 
   const btnVolver = document.createElement("a");
-
-    btnVolver.href = "pages/productos.html";
+  btnVolver.href = "./productos.html";
   btnVolver.innerHTML = <button type="button">Volver al catálogo</button>;
 
   divBotones.appendChild(btnAgregar);
@@ -59,24 +50,15 @@ function renderizarProducto(p) {
 }
 
 function agregarProducto(p, btn) {
-  const art = btn.closest(".botones")?.previousElementSibling;
-  const stockEl = art?.querySelector(".stock");
+  const art = btn.closest(".botones").previousElementSibling;
+  const stockEl = art.querySelector(".stock");
 
   if (p.stock > 0) {
     p.stock--;
-    if (stockEl) stockEl.textContent = p.stock;
-
-
-    agregarAlCarrito({
-      id: p.id,
-      nombre: p.nombre,
-      precio: p.precio,
-      img: p.img
-    });
-
-    productos = productos.map(prod => (prod.id === p.id ? p : prod));
+    stockEl.textContent = p.stock;
+    agregarACarrito(p);
+    productos = productos.map(prod => prod.id === p.id ? p : prod);
     localStorage.setItem("productos", JSON.stringify(productos));
-
     alert(Se agregó ${p.nombre} al carrito.);
   }
 
@@ -86,25 +68,39 @@ function agregarProducto(p, btn) {
   }
 }
 
-function initProducto() {
-  initCarrito();
+function agregarACarrito(producto) {
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];  // recupera el carrito desde localStorage
 
+  const item = carrito.find(prod => prod.id === producto.id);       // busca si el producto ya existe en el carrito
+  if (item) {             
+    item.cantidad += 1;
+  } else {
+    carrito.push({
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      cantidad: 1
+    })
+  }
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+  actualizarBadge();
+}
+
+function initProducto() {
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  const id = params.get('id');
   if (!id) return;
 
   const producto = productos.find(p => String(p.id) === String(id));
-  if (!producto) {
-    const cont = document.getElementById("detalleProducto");
-    if (cont) cont.innerHTML = "<p>Producto no encontrado.</p>";
-    return;
-  }
+  if (!producto) return;
 
   renderizarProducto(producto);
+
+  document.addEventListener("DOMContentLoaded", () => { initCarrito(); });
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initProducto);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initProducto);
 } else {
   initProducto();
 }
