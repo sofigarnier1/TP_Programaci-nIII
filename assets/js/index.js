@@ -1,9 +1,11 @@
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
-localStorage.setItem("productos", JSON.stringify(productos));
+let cache;
+try { cache = JSON.parse(localStorage.getItem("productos") || "[]"); } catch { cache = []; }
+let productos = Array.isArray(cache) && cache.length ? cache : datosProductos.slice();
+productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0, stock: Number(p.stock) || 0 }));
+if (!(Array.isArray(cache) && cache.length)) localStorage.setItem("productos", JSON.stringify(productos));
 
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
@@ -19,10 +21,11 @@ function tomarAleatorios(arr, n = 2) {
 function tarjetaDestacada(p) {
   const art = document.createElement("div");
   art.className = "producto";
-  art.dataset.id = p.id; // <-- para usar en el click
+  art.dataset.id = p.id;
+  const imgSrc = p.img || "assets/img/placeholder.png";
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
+    <img src="${imgSrc}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -40,7 +43,6 @@ function initIndex() {
   cont.innerHTML = "";
   destacados.forEach(p => cont.appendChild(tarjetaDestacada(p)));
 
-  // 🔹 Delegación de clicks: agregar al carrito / ver detalles
   cont.addEventListener("click", (e) => {
     const btnAdd = e.target.closest(".btnCarrito");
     if (btnAdd) {
@@ -48,24 +50,17 @@ function initIndex() {
       const id = card?.dataset.id;
       const prod = productos.find(x => String(x.id) === String(id));
       if (!prod) return;
-      agregarAlCarrito({
-        id: prod.id,
-        nombre: prod.nombre,
-        precio: Number(prod.precio) || 0,
-        img: prod.img
-      });
+      agregarAlCarrito({ id: prod.id, nombre: prod.nombre, precio: Number(prod.precio) || 0, img: prod.img });
       return;
     }
-
     const btnDet = e.target.closest(".btnDetalle");
     if (btnDet) {
       const card = btnDet.closest(".producto");
       const id = card?.dataset.id;
-      if (id) location.href = `/pages/producto.html?id=${id}`;
+      if (id) location.href = pages/detalle.html?id=${id};
     }
   });
 
-  // contador del nav
   initCarrito();
 }
 
@@ -74,3 +69,4 @@ if (document.readyState === "loading") {
 } else {
   initIndex();
 }
+
