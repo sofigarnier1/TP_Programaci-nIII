@@ -180,6 +180,15 @@ document.addEventListener("DOMContentLoaded", () => {
       hamburger.setAttribute("aria-expanded", !expanded);
     });
   }
+
+  const btnVaciar = document.getElementById("btnVaciar");
+  if (btnVaciar) {
+    btnVaciar.addEventListener("click", () => {
+      vaciarCarrito();
+      renderCart();    
+      mostrarCarrito(); 
+    });
+  }
 });
 
 export { initCarrito, agregarAlCarrito, vaciarCarrito};
