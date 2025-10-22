@@ -30,6 +30,12 @@ const sanImg = (src = "") =>
 
 function agregarAlCarrito(prod){
   const cart = readCart();
+  const productos = readProductos();
+  const pIdx = productos.findIndex(p => String(p.id) === String(prod.id));
+  const stock = pIdx >= 0 ? Number(productos[pIdx].stock || 0) : 0;
+  if (pIdx >= 0 && stock <= 0) { updateBadges(cart); return; }
+  if (pIdx >= 0) ajustarStockProducto(prod.id, -1);
+
   const idx = cart.findIndex(i => String(i.id) === String(prod.id));
   if (idx >= 0) {
     cart[idx].cantidad = Number(cart[idx].cantidad || 1) + 1;
