@@ -1,5 +1,5 @@
-import { productos as datosProductos } from "./data.js";
-import { agregarAlCarrito, initCarrito } from "./carrito.js";
+import { productos as datosProductos } from "assets/js/data.js";
+import { agregarAlCarrito, initCarrito } from "assets/js/carrito.js";
 
 /* Normaliza ruta de imagen para /pages/ */
 function resolveImg(src = "") {
