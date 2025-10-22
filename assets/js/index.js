@@ -61,7 +61,7 @@ function initIndex() {
     if (btnDet) {
       const card = btnDet.closest(".producto");
       const id = card?.dataset.id;
-      if (id) location.href = `/pages/producto.html?id=${id}`;
+      if (id) location.href = `pages/producto.html?id=${id}`;
     }
   });
 
