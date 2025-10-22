@@ -1,5 +1,5 @@
-import { productos as datosProductos } from "./data.js";
-import { initCarrito, agregarAlCarrito } from "./carrito.js";
+import { productos as datosProductos } from "assets/js/data.js";
+import { initCarrito, agregarAlCarrito } from "assets/js/carrito.js";
 
 // --- helper robusto para material ---
 const getMaterial = (p = {}) => {
