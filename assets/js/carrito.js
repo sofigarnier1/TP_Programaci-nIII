@@ -171,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCarrito();
   mostrarCarrito();
   renderCart();
+
   const hamburger = document.querySelector(".hamburger");
   const nav = document.querySelector(".nav-links");
   if (hamburger && nav) {
@@ -183,13 +184,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnVaciar = document.getElementById("btnVaciar");
   if (btnVaciar) {
-    btnVaciar.addEventListener("click", () => {
+    btnVaciar.addEventListener("click", (e) => {
+      e.preventDefault();
+      btnVaciar.disabled = true;
       vaciarCarrito();
-      renderCart();    
-      mostrarCarrito(); 
+      renderCart();
+      mostrarCarrito();
+      btnVaciar.disabled = false;
     });
   }
 });
+
 
 export { initCarrito, agregarAlCarrito, vaciarCarrito};
 
