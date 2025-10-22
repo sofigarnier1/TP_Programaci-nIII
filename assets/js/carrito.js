@@ -182,5 +182,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-export { initCarrito, agregarAlCarrito };
+export { initCarrito, agregarAlCarrito, vaciarCarrito};
 
