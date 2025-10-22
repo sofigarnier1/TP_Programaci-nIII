@@ -1,108 +1,83 @@
-import { productos as datosProductos } from './data.js';
-import { initCarrito } from "./carrito.js";
+import { productos as datosProductos } from "./data.js";
+import { agregarAlCarrito, initCarrito } from "./carrito.js";
 
-let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-localStorage.setItem("productos", JSON.stringify(productos));
+/* Normaliza ruta de imagen para /pages/ */
+function resolveImg(src = "") {
+  if (src.startsWith("../")) return src;
+  return "../" + src.replace(/^\.?\//, "");
+}
 
-function renderizarProducto(p) {
+/* Obtiene ?id=... */
+function getIdFromURL() {
+  const params = new URLSearchParams(location.search);
+  return params.get("id");
+}
+
+/* Toast */
+function mostrarMensaje(texto = "Producto agregado con éxito 💚") {
+  let aviso = document.getElementById("mensaje-exito");
+  if (!aviso) {
+    aviso = document.createElement("div");
+    aviso.id = "mensaje-exito";
+    document.body.appendChild(aviso);
+  }
+  aviso.textContent = texto;
+  aviso.classList.add("visible");
+  setTimeout(() => aviso.classList.remove("visible"), 2500);
+}
+
+/* Productos: usa lo guardado o data.js */
+const productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+
+function renderDetalle() {
+  const id = getIdFromURL();
   const cont = document.getElementById("detalleProducto");
   if (!cont) return;
 
-  cont.innerHTML = "";
+  const prod = productos.find(p => String(p.id) === String(id));
+  if (!prod) {
+    cont.innerHTML = `<p style="text-align:center">Producto no encontrado.</p>`;
+    return;
+  }
 
-  const art = document.createElement("div");
-  art.className = "producto";
-  art.dataset.id = p.id;
+  // 👇 acá mapeamos "descripcion" como "Material" si no existe "material"
+  const materialTxt = prod.material ?? prod.descripcion ?? "—";
 
-  art.innerHTML = `
-      <h3>${p.nombre}</h3>
-      <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
-      <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
-      <p><strong>Material:</strong> ${p.descripcion}</p>
-      <p><strong>Categoría:</strong> ${p.categoria}</p>
-      <p><strong>Stock:</strong> <span class="stock">${p.stock}</span></p>
+  cont.innerHTML = `
+    <article class="detalle-card">
+      <h1>${prod.nombre}</h1>
+
+      <img class="detalle-img" src="${resolveImg(prod.img)}" alt="${prod.nombre}">
+
+      <div class="detalle-info">
+        <p><strong>Precio:</strong> $ ${Number(prod.precio || 0).toLocaleString("es-AR")}</p>
+        <p><strong>Material:</strong> ${materialTxt}</p>
+        <p><strong>Categoría:</strong> ${prod.categoria ?? "—"}</p>
+        <p><strong>Stock:</strong> ${typeof prod.stock !== "undefined" ? prod.stock : "—"}</p>
+      </div>
+
+      <div class="detalle-actions">
+        <button id="btnAgregarDetalle" class="btn-solid">Agregar al carrito</button>
+        <a href="productos.html" class="btn-ghost">Volver al catálogo</a>
+      </div>
+    </article>
   `;
 
-  const divBotones = document.createElement("div");
-  divBotones.className = "botones";
-
-  const btnAgregar = document.createElement("button");
-  btnAgregar.type = "button";
-  btnAgregar.className = "agregar";
-  btnAgregar.textContent = "Agregar al carrito";
-
-  const btnVolver = document.createElement("a");
-  btnVolver.href = "./productos.html";
-  btnVolver.innerHTML = `<button type="button">Volver al catálogo</button>`;
-
-  divBotones.appendChild(btnAgregar);
-  divBotones.appendChild(btnVolver);
-
-  cont.appendChild(art);
-  cont.appendChild(divBotones);
-
-  if (p.stock === 0) {
-    btnAgregar.disabled = true;
-    btnAgregar.textContent = "Sin stock";
-  } else {
-    btnAgregar.addEventListener("click", () => agregarProducto(p, btnAgregar));
+  const btn = document.getElementById("btnAgregarDetalle");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      agregarAlCarrito({
+        id: prod.id,
+        nombre: prod.nombre,
+        precio: Number(prod.precio || 0),
+        img: prod.img
+      });
+      mostrarMensaje("Producto agregado con éxito 💚");
+    });
   }
 }
 
-function agregarProducto(p, btn) {
-  const art = btn.closest(".botones").previousElementSibling;
-  const stockEl = art.querySelector(".stock");
-
-  if (p.stock > 0) {
-    p.stock--;
-    stockEl.textContent = p.stock;
-    agregarACarrito(p);
-    productos = productos.map(prod => prod.id === p.id ? p : prod);
-    localStorage.setItem("productos", JSON.stringify(productos));
-    alert(`Se agregó ${p.nombre} al carrito.`);
-  }
-
-  if (p.stock === 0) {
-    btn.disabled = true;
-    btn.textContent = "Sin stock";
-  }
-}
-
-function agregarACarrito(producto) {
-  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];  // recupera el carrito desde localStorage
-
-  const item = carrito.find(prod => prod.id === producto.id);       // busca si el producto ya existe en el carrito
-  if (item) {             
-    item.cantidad += 1;
-  } else {
-    carrito.push({
-      id: producto.id,
-      nombre: producto.nombre,
-      precio: producto.precio,
-      cantidad: 1
-    })
-  }
-  localStorage.setItem("carrito", JSON.stringify(carrito));
-  actualizarBadge();
-}
-
-function initProducto() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  if (!id) return;
-
-  const producto = productos.find(p => String(p.id) === String(id));
-  if (!producto) return;
-
-  renderizarProducto(producto);
-
-  document.addEventListener("DOMContentLoaded", () => { initCarrito(); });
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initProducto);
-} else {
-  initProducto();
-}
-
-export { initProducto };
+document.addEventListener("DOMContentLoaded", () => {
+  initCarrito?.();
+  renderDetalle();
+});

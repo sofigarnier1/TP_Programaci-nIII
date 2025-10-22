@@ -1,101 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../assets/img/sbicon.ico">
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <title>Productos | Sabina Accesorios</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../assets/img/sbicon.ico">
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <title>Productos | Sabina Accesorios</title>
 </head>
 
 <body>
-    <!-- header común -->
+
+  <!-- header común -->
     <header>
-        <nav>
-            <ul>
-                <li><a href="../index.html">Inicio</a></li>
-                <li><a href="#">Productos</a></li>
-                <li><a href="contactos.html">Contactos</a></li>
-                <li><a href="carrito.html">Carrito (<span id="badgeCarrito">0</span>)</a></li>
-            </ul>
-        </nav>
+      <nav>
+
+        <div class="bar-inner">
+          <!-- botón hamburguesa -->
+          <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+
+          <div class="nav-links">
+            <a href="../index.html">Inicio</a>
+            <a href="#">Productos</a>
+            <a href="contactos.html">Contactos</a>
+            <a href="carrito.html" id="nav-cart">🛒 (0)</a>
+          </div>
+        </div>
+      </nav>
     </header>
 
-    <main>
-        <section id="hero">
-            <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
-        </section>
+  <main>
+    <section id="hero">
+      <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
+    </section>
 
-        <!-- Productos -->
-        <h1 id="productos-titulo">Productos en Stock</h1>
+    <!-- Productos -->
+    <h1 id="productos-titulo">Productos en Stock</h1>
 
-        <section id="filtro">
-        <p1>Filtrar por categoría:</p1>
-            <select name="categoria" name="categoria">
-            <option value = "all">Todas</option>
-            <option value = "anillos">Anillos</option>
-            <option value = "aros">Aros</option>
-            <option value = "carteras">Carteras</option>
-            <option value = "collares">Collares</option>  
-        </select>
-        <button id="aplicar" type="button">Aplicar</button>
-        </section>
+    <section id="filtro">
+      <label for="categoria">Filtrar por categoría:</label>
+      <select id="categoria">
+        <option value="all">Todas</option>
+        <option value="anillos">Anillos</option>
+        <option value="aros">Aros</option>
+        <option value="carteras">Carteras</option>
+        <option value="collares">Collares</option>
+      </select>
+      <!-- <button id="aplicar" type="button">Aplicar</button> -->
+    </section>
 
-        <section id="productos">
-            <!-- <div class="producto" data-id="101" data-categoria="aros" data-cantidad="8" data-precio="6900">
-                <h3>Aros Tradicionales</h3>
-                <img src="../assets/img/aros.jpeg" alt="Aros tradicionales de acero dorado" height="400" width="400">
-                <p><strong>Precio:</strong> $6.900</p>
-                <p><strong>Material: </strong>De acero dorado.</p>
-                <p><strong>Categoría: </strong> Aros</p>
-                <p><strong>Stock:</strong> 8</p>
-                <label><button type="button">Ver detalles</button> 
-                <button type="button">Agregar al carrito</button></label>
-            </div>
+    <section id="productos"></section>
+  </main>
 
-            <div class="producto" data-id="102" data-categoria="collares" data-cantidad="12" data-precio="8500">
-                <h3>Collar y cadena</h3>
-                <img src="../assets/img/cadema.jpeg" alt="Collar y cadena de acero dorado" height="400" width="400">
-                <p><strong>Precio:</strong> $8.500</p>
-                <p><strong>Material: </strong> De acero dorado.</p>
-                <p><strong>Categoría: </strong> Collares </p>
-                <p><strong>Stock:</strong> 12</p>
-                <label><button type="button">Ver detalles</button> 
-                <button type="button">Agregar al carrito</button></label>
-            </div>
+  <!-- footer común -->
+  <footer>
+    <p>&copy; <strong>2025 Sabina Accesorios - Todos los derechos reservados.</strong></p>
+  </footer>
 
-             <div class="producto" data-id="103" data-categoria="anillos" data-cantidad="10" data-precio="4000">
-                <h3>Anillo</h3>
-                 <img src="../assets/img/anillos.jpeg" alt="Anillo de acero quirurgico" height="400" width="400">
-                <p><strong>Precio: </strong>$4.000</p>
-                <p><strong>Material: </strong>De acero quirurgico.</p>
-                <p><strong>Categoría: </strong> Anillos</p>
-                <p><strong>Stock:</strong> 10</p>
-                <label><button type="button">Ver detalles</button> 
-                <button type="button">Agregar al carrito</button></label>
-            </div>
+  <!-- Script principal -->
+  <script type="module" src="../assets/js/catalogo.js"></script>
 
-            <div class="producto" data-id="104" data-categoria="carteras" data-cantidad="5" data-precio="25000">
-                <h3>Mini bag</h3>
-                <img src="../assets/img/cartera.jpeg" alt="Cartera mini bag de eco cuero" height="400" width="400">
-                <p><strong>Precio:</strong> $25.000</p>
-                <p><strong>Material: </strong>Eco cuero.</p>
-                <p><strong>Categoría: </strong> Carteras </p>
-                <p><strong>Stock:</strong> 5</p>
-                <label><button type="button">Ver detalles</button> 
-                <button type="button">Agregar al carrito</button></label>
-            </div> -->
-        </section>
-    </main>
+  <!-- Script para filtro automático -->
+  <script>
+    // Esperar a que el DOM esté listo
+    document.addEventListener("DOMContentLoaded", () => {
+      const select = document.getElementById("categoria");
+      const contenedor = document.getElementById("productos");
 
-    <script type="module" src="../assets/js/catalogo.js"></script>
+      // Escuchar cambio del select
+      select.addEventListener("change", () => {
+        const categoria = select.value;
+        const cards = contenedor.querySelectorAll(".producto");
 
-    <!-- footer común -->
-    <footer>
-        <p>&copy; <strong>2025 Sabina Accesorios - Todos los derechos reservados.</strong></p>
-    </footer>
+        cards.forEach(card => {
+          const cat = card.dataset.cat?.toLowerCase() || "";
+          card.style.display =
+            categoria === "all" || cat === categoria ? "" : "none";
+        });
+      });
+    });
+  </script>
 </body>
 </html>

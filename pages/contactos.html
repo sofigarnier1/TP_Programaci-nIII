@@ -1,43 +1,230 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../assets/img/sbicon.ico">
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <title>Contactos | Sabina Accesorios</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto | Sabina Accesorios</title>
+
+  <!-- Bootstrap por CDN (primero) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Iconos Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Fuentes del sitio -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos globales del sitio -->
+  <link rel="stylesheet" href="../assets/css/styles.css">
+
+  <!-- Estilos locales de esta página -->
+  <link rel="stylesheet" href="../assets/css/contacto-bootstrap.css">
 </head>
 
 <body>
-    <!-- header común -->
-    <header>
-        <nav>
-            <ul>
-                <li><a href="../index.html">Inicio</a></li>
-                <li><a href="productos.html">Productos</a></li>
-                <li><a href="#.html">Contactos</a></li>
-                <li><a href="carrito.html">Carrito (<span id="badgeCarrito">0</span>)</a></li>
-            </ul>
-        </nav>
-    </header>
+  <!-- NAV -->
+  <header>
+    <nav>
+      <div class="bar-inner">
+        <!-- botón hamburguesa -->
+        <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
 
-    <main>
-        <section id="hero">
-            <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
-        </section>
-        
-        <!-- Contactos -->
-        <section id="contactos">
-            <h2 id="contactos-titulo">Contactos</h2>
-        </section>    
-    </main>
+        <div class="nav-links">
+          <a href="/index.html">Inicio</a>
+          <a href="/pages/productos.html">Productos</a>
+          <a href="/pages/contactos.html">Contactos</a>
+          <a href="/pages/carrito.html" id="nav-cart">🛒 (0)</a>
+        </div>
+      </div>
+    </nav>
 
-    <!-- footer común -->
-    <footer>
-        <p>&copy;<strong> 2025 Sabina Accesorios - Todos los derechos reservados.</strong></p>
-    </footer>
+    <div class="header-logo">
+      <img src="../assets/img/4.png" alt="Logo Sabina Accesorios" class="logo-sb">
+    </div>
+  </header>
+
+  <!-- CONTENIDO -->
+  <main class="py-4 py-md-5">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-12 text-center">
+          <h1 class="display-6 mb-0" style="font-family: 'Playfair Display', serif;">Contacto</h1>
+          <!-- Subtítulo removido -->
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Formulario -->
+        <div class="col-12 col-lg-6">
+          <div id="formAlert" class="alert alert-success d-none" role="alert">
+            <strong>¡Gracias!</strong> Tu mensaje fue enviado correctamente.
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-header text-white sabina-header">
+              Formulario de contacto
+            </div>
+            <div class="card-body">
+              <form id="contactForm" novalidate>
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre y apellido" required>
+                  <div class="invalid-feedback">Ingresá tu nombre.</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="tu@email.com" required>
+                  <div class="invalid-feedback">Ingresá un email válido.</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="motivo" class="form-label">Motivo de consulta</label>
+                  <select id="motivo" name="motivo" class="form-select" required>
+                    <option value="" selected disabled>Seleccioná una opción</option>
+                    <option value="pedido">Estado de pedido</option>
+                    <option value="cambios">Cambios/Devoluciones</option>
+                    <option value="sabinaClub">Sabina Club</option>
+                    <option value="otro">Otro</option>
+                  </select>
+                  <div class="invalid-feedback">Seleccioná un motivo.</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="mensaje" class="form-label">Mensaje</label>
+                  <textarea class="form-control" id="mensaje" name="mensaje" rows="5" placeholder="Contanos en qué podemos ayudarte" required></textarea>
+                  <div class="invalid-feedback">Escribí tu mensaje.</div>
+                </div>
+
+                <div class="form-footer">
+  <div class="d-flex gap-2">
+    <button class="btn" type="submit">Enviar</button>
+    <button class="btn btn-outline-secondary" type="reset">Limpiar</button>
+  </div>
+  <a href="#" data-bs-toggle="modal" data-bs-target="#privacidadModal">
+    Ver política de privacidad
+  </a>
+</div>
+
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info lateral -->
+        <div class="col-12 col-lg-6">
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Datos de contacto</h5>
+              <p class="mb-2"><i class="bi bi-geo-alt"></i> Galarza 1587, junto a la tienda de ropa Andika</p>
+              <p class="mb-2"><i class="bi bi-envelope"></i> sabina.accesorios@gmail.com</p>
+              <p class="mb-2"><i class="bi bi-clock"></i> Lun a Sáb · 9:30–12:30 y 17:00–21:00</p>
+          
+              <div class="mt-3 d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-secondary btn-sm btn-social" href="https://instagram.com/sabina.accesorioss" target="_blank" rel="noopener">
+                  <i class="bi bi-instagram"></i> Instagram
+                </a>
+                <a class="btn btn-outline-secondary btn-sm btn-social" href="https://wa.me/5493442568773?text=Hola%20Sabina!%20Quiero%20hacer%20una%20consulta%20%F0%9F%98%8A" target="_blank" rel="noopener">
+                  <i class="bi bi-whatsapp"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion mb-4" id="faq">
+            <!-- Ítem principal: envíos (verde al abrir) -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="qEnviosHead">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#qEnvios" aria-expanded="true" aria-controls="qEnvios">
+                  ¿Hacen envíos?
+                </button>
+              </h2>
+              <div id="qEnvios" class="accordion-collapse collapse show" aria-labelledby="qEnviosHead" data-bs-parent="#faq">
+                <div class="accordion-body">
+                  Hacemos envíos a <strong>todo el país por Correo Argentino</strong> y en la ciudad con <strong>mensajería</strong>.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="qUbicacionHead">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qUbicacion" aria-expanded="false" aria-controls="qUbicacion">
+                  ¿Dónde están ubicados?
+                </button>
+              </h2>
+              <div id="qUbicacion" class="accordion-collapse collapse" aria-labelledby="qUbicacionHead" data-bs-parent="#faq">
+                <div class="accordion-body">
+                  Estamos en <strong>Galarza 1587</strong>, junto a la tienda de ropa Andika. Consultá por días y horarios de retiro.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mapa -->
+          <div class="ratio ratio-4x3 rounded overflow-hidden shadow-sm">
+            <iframe
+              src="https://maps.google.com/maps?q=Galarza%201587%2C%20Concepci%C3%B3n%20del%20Uruguay%2C%20Entre%20R%C3%ADos&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-top py-3" style="background: var(--accent, #7cee8b);">
+    <div class="container text-center small">
+2025 Sabina Accesorios - Todos los derechos reservados.    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal fade" id="privacidadModal" tabindex="-1" aria-labelledby="privacidadTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="privacidadTitulo">Política de privacidad</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          Usaremos tus datos únicamente para responder tu consulta. No compartimos información con terceros.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossorigin="anonymous"></script>
+
+  <!-- Validación mínima -->
+  <script>
+    (() => {
+      const form = document.getElementById('contactForm');
+      const alertBox = document.getElementById('formAlert');
+      form.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        if (!form.checkValidity()) {
+          ev.stopPropagation();
+          form.classList.add('was-validated');
+          return;
+        }
+        form.reset();
+        form.classList.remove('was-validated');
+        alertBox.classList.remove('d-none');
+        setTimeout(() => alertBox.classList.add('d-none'), 4000);
+      });
+    })();
+  </script>
+
+  <script type="module" src="../assets/js/carrito.js"></script>
 </body>
-
 </html>
+
+

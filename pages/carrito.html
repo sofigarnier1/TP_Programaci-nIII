@@ -1,46 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../assets/img/sbicon.ico">
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <title>Carrito | Sabina Accesorios</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../assets/img/sbicon.ico">
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link rel="stylesheet" href="../assets/css/carrito.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <title>Carrito | Sabina Accesorios</title>
 </head>
 <body>
-    <!-- header común -->
+  <div class="page">
+
+    <!-- NAV full width -->
     <header>
-        <nav>
-            <ul>
-                <li><a href="../index.html">Inicio</a></li>
-                <li><a href="productos.html">Productos</a></li>
-                <li><a href="contactos.html">Contactos</a></li>
-                <li><a href="#.html">Carrito (<span id="badgeCarrito">0</span>)</a></li>
-            </ul>
-        </nav>
+      <nav>
+        <div class="bar-inner">
+          <!-- botón hamburguesa -->
+          <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+
+          <div class="nav-links">
+            <a href="/index.html">Inicio</a>
+            <a href="/pages/productos.html">Productos</a>
+            <a href="/pages/contactos.html">Contactos</a>
+            <a href="/pages/carrito.html" id="nav-cart">🛒 (0)</a>
+          </div>
+        </div>
+      </nav>
     </header>
 
+
+    <!-- CONTENIDO -->
     <main>
-        <section id="hero">
-            <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
-        </section>
-        
-        <h2 id="carrito-titulo">Tu carrito</h2>
+      <section id="hero" class="container">
+        <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
+      </section>
+      
+      <section class="carrito-wrap container">
+        <h1>Tu carrito</h1>
 
-        <!-- Carrito -->
-        <section id="contCarrito">
+        <div class="carrito-grid">
+          <!-- Tabla -->
+          <div class="tabla-card">
+            <table class="tabla">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th class="num">Precio</th>
+                  <th class="center">Cantidad</th>
+                  <th class="num">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="cart-body"></tbody>
+            </table>
 
-        </section>
+            <div id="cart-empty" class="vacio" hidden>
+              Tu carrito está vacío.
+            </div>
+          </div>
 
-        <script type="module" src="../assets/js/carrito.js"></script>
+          <!-- Resumen -->
+          <aside class="resumen-card">
+            <h2>Resumen</h2>
+            <div class="resumen-row">
+              <span>Items:</span>
+              <strong id="resumen-items">0</strong>
+            </div>
+            <div class="resumen-row">
+              <span>Total:</span>
+              <strong id="resumen-total">$ 0</strong>
+            </div>
 
+            <div class="resumen-actions">
+              <a class="btn btn-sec" href="/pages/productos.html">Seguir comprando</a>
+            </div>
+          </aside>
+        </div>
+      </section>
     </main>
 
-    <!-- footer común -->
+    <!-- FOOTER full width -->
     <footer>
-        <p>&copy;<strong> 2025 Sabina Accesorios - Todos los derechos reservados.</strong></p>
+      <div class="bar-inner">
+        <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
+      </div>
     </footer>
-</body>
+  </div>
 
+  <!-- Script del carrito -->
+  <script type="module" src="../assets/js/carrito.js"></script>
+</body>
 </html>

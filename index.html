@@ -1,47 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="assets/img/sbicon.ico">
-    <link rel="stylesheet" href="assets/css/styles.css" />
-    <title>Inicio | Sabina Accesorios</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="./assets/img/sbicon.ico" />
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <title>Inicio | Sabina Accesorios</title>
 </head>
-
 <body>
-    <div class="container">
-        <nav>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="pages/productos.html">Productos</a></li>
-                <li><a href="pages/contactos.html">Contactos</a></li>
-                <li><a href="pages/carrito.html">Carrito (<span id="badgeCarrito">0</span>)</a></li>
-            </ul>
-        </nav>
 
+  <!-- NAV -->
+    <header>
+      <nav>
+
+        <div class="bar-inner">
+          <!-- botón hamburguesa -->
+          <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+
+          <div class="nav-links">
+            <a href="#.html">Inicio</a>
+            <a href="./pages/productos.html">Productos</a>
+            <a href="./pages/contactos.html">Contactos</a>
+            <a href="./pages/carrito.html" id="nav-cart">🛒 (0)</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- CONTENIDO -->
     <main>
-        <section id="hero">
-            <img class="logo" src="./assets/img/3.png" alt="Logo Sabina Accesorios">
-            <h1>Bienvenidos a Sabina Accesorios</h1>
-            <p>Accesorios que acompañan tu <strong>look 💋</strong></p>
-        </section>
+      <section id="hero" class="container">
+        <img class="logo" src="./assets/img/3.png" alt="Logo Sabina Accesorios">
+        <h1>Bienvenidos a Sabina Accesorios</h1>
+        <p>Accesorios que acompañan tu <strong>look 💋</strong></p>
+      </section>
 
-        <!-- Destacados -->
+      <!-- Destacados -->
+      <section class="container">
         <h2 id="destacados-titulo">Los productos más pedidos 🔥</h2>
-        <section id="destacados">
-            
-        </section>
+        <div id="destacados"></div>
+      </section>
     </main>
 
-    <script type="module" src="./assets/js/index.js"></script>
+    <!-- FOOTER full width -->
+    <footer>
+      <div class="bar-inner">
+        <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
+      </div>
+    </footer>
 
-    <!-- footer común -->
-      <footer>
-          <p>&copy;<strong>2025 Sabina Accesorios - Todos los derechos reservados.</strong></p>
-      </footer>
-    </div>
+  <!-- Script del inicio -->
+  <script type="module" src="./assets/js/index.js"></script>
 </body>
-
 </html>

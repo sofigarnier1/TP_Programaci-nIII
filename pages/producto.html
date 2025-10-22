@@ -14,12 +14,19 @@
     <!-- header común -->
     <header>
         <nav>
-            <ul>
-                <li><a href="../index.html">Inicio</a></li>
-                <li><a href="productos.html">Productos</a></li>
-                <li><a href="contactos.html">Contactos</a></li>
-                <li><a href="carrito.html">Carrito (<span id="badgeCarrito">0</span>)</a></li>
-            </ul>
+            <div class="bar-inner">
+          <!-- botón hamburguesa -->
+          <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+
+          <div class="nav-links">
+            <a href="../index.html">Inicio</a>
+            <a href="productos.html">Productos</a>
+            <a href="contactos.html">Contactos</a>
+            <a href="carrito.html" id="nav-cart">🛒 (0)</a>
+          </div>
+        </div>
         </nav>
     </header>
 
@@ -34,6 +41,8 @@
         </section>
 
     </main>
+
+
 
     <script type="module" src="../assets/js/detalle.js"></script>
 
