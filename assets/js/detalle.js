@@ -1,15 +1,9 @@
-
-import { productos as datosProductos } from "./data.js";
 import { agregarAlCarrito, initCarrito } from "./carrito.js";
-
+import { productos as datosProductos } from "./data.js";
 
 function resolveImg(src = "") {
-  // Si ya tiene ../assets, lo deja igual
   if (src.includes("../assets/")) return src;
-
-  // Si tiene assets sin ../, lo ajusta
   if (src.includes("assets/")) return "../" + src.replace(/^\.?\//, "");
-
   return "../assets/img/" + src;
 }
 
@@ -30,36 +24,35 @@ function mostrarMensaje(texto = "Producto agregado con éxito 💚") {
   setTimeout(() => aviso.classList.remove("visible"), 2500);
 }
 
-const productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-
+function readProductos() {
+  try { return JSON.parse(localStorage.getItem("productos")) || datosProductos; }
+  catch { return datosProductos; }
+}
 
 function renderDetalle() {
   const id = getIdFromURL();
   const cont = document.getElementById("detalleProducto");
   if (!cont) return;
 
+  const productos = readProductos();
   const prod = productos.find(p => String(p.id) === String(id));
   if (!prod) {
     cont.innerHTML = `<p style="text-align:center">Producto no encontrado.</p>`;
     return;
   }
 
-  // Usa descripción como material si no hay campo propio
   const materialTxt = prod.material ?? prod.descripcion ?? "—";
 
   cont.innerHTML = `
     <article class="detalle-card">
       <h1>${prod.nombre}</h1>
-
       <img class="detalle-img" src="${resolveImg(prod.img)}" alt="${prod.nombre}">
-
       <div class="detalle-info">
         <p><strong>Precio:</strong> $ ${Number(prod.precio || 0).toLocaleString("es-AR")}</p>
         <p><strong>Material:</strong> ${materialTxt}</p>
         <p><strong>Categoría:</strong> ${prod.categoria ?? "—"}</p>
-        <p><strong>Stock:</strong> ${typeof prod.stock !== "undefined" ? prod.stock : "—"}</p>
+        <p><strong>Stock:</strong> <span id="stock-value">${typeof prod.stock !== "undefined" ? prod.stock : "—"}</span></p>
       </div>
-
       <div class="detalle-actions">
         <button id="btnAgregarDetalle" class="btn-solid">Agregar al carrito</button>
         <a href="productos.html" class="btn-ghost">Volver al catálogo</a>
@@ -67,7 +60,6 @@ function renderDetalle() {
     </article>
   `;
 
-  // Evento para agregar al carrito
   const btn = document.getElementById("btnAgregarDetalle");
   if (btn) {
     btn.addEventListener("click", () => {
@@ -77,11 +69,21 @@ function renderDetalle() {
         precio: Number(prod.precio || 0),
         img: prod.img
       });
+      const actualizado = readProductos().find(p => String(p.id) === String(id));
+      const sv = document.getElementById("stock-value");
+      if (sv && actualizado) sv.textContent = typeof actualizado.stock !== "undefined" ? actualizado.stock : "—";
       mostrarMensaje("Producto agregado con éxito 💚");
     });
   }
-}
 
+  window.addEventListener("storage", (e) => {
+    if (e.key === "productos") {
+      const actualizado = readProductos().find(p => String(p.id) === String(id));
+      const sv = document.getElementById("stock-value");
+      if (sv && actualizado) sv.textContent = typeof actualizado.stock !== "undefined" ? actualizado.stock : "—";
+    }
+  });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   initCarrito?.();
