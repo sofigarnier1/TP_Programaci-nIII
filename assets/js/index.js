@@ -1,5 +1,5 @@
-import { productos as datosProductos } from "assets/js/data.js";
-import { initCarrito, agregarAlCarrito } from "assets/js/carrito.js";
+import { productos as datosProductos } from "/assets/js/data.js";
+import { initCarrito, agregarAlCarrito } from "/assets/js/carrito.js";
 
 let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
 productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
