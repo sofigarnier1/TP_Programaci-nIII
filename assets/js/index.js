@@ -9,6 +9,33 @@ productos = productos.map(p => ({
 }));
 localStorage.setItem("productos", JSON.stringify(productos));
 
+function readProductos() {
+  try { return JSON.parse(localStorage.getItem("productos")) || datosProductos; }
+  catch { return datosProductos; }
+}
+
+function mostrarMensaje(texto = "Producto agregado con éxito 💚") {
+  let aviso = document.getElementById("mensaje-exito");
+  if (!aviso) {
+    aviso = document.createElement("div");
+    aviso.id = "mensaje-exito";
+    aviso.style.position = "fixed";
+    aviso.style.bottom = "20px";
+    aviso.style.left = "50%";
+    aviso.style.transform = "translateX(-50%)";
+    aviso.style.background = "#4d94a4";
+    aviso.style.color = "#fff";
+    aviso.style.padding = "10px 20px";
+    aviso.style.borderRadius = "8px";
+    aviso.style.fontFamily = "Montserrat, sans-serif";
+    aviso.style.zIndex = "9999";
+    document.body.appendChild(aviso);
+  }
+  aviso.textContent = texto;
+  aviso.style.opacity = "1";
+  setTimeout(() => (aviso.style.opacity = "0"), 2000);
+}
+
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
   const enStock = src.filter(p => Number(p.stock) > 0);
@@ -61,12 +88,22 @@ function initIndex() {
       const id = card?.dataset.id;
       const prod = productos.find(x => String(x.id) === String(id));
       if (!prod) return;
+
+      const stockDisp = Number(prod.stock ?? 0);
+      if (stockDisp <= 0) {
+        mostrarMensaje("Sin stock 😕");
+        return;
+      }
+
       agregarAlCarrito({
         id: prod.id,
         nombre: prod.nombre,
         precio: Number(prod.precio) || 0,
         img: prod.img
       });
+
+      productos = readProductos();
+      mostrarMensaje("Producto agregado con éxito 💚");
       return;
     }
 
@@ -91,5 +128,6 @@ if (document.readyState === "loading") {
 } else {
   initIndex();
 }
+
 
 
