@@ -1,19 +1,23 @@
-import { productos as datosProductos } from "/assets/js/data.js";
-import { agregarAlCarrito, initCarrito } from "/assets/js/carrito.js";
 
-/* Normaliza ruta de imagen para /pages/ */
+import { productos as datosProductos } from "./data.js";
+import { agregarAlCarrito, initCarrito } from "./carrito.js";
+
+
 function resolveImg(src = "") {
-  if (src.startsWith("../")) return src;
-  return "../" + src.replace(/^\.?\//, "");
+  // Si ya tiene ../assets, lo deja igual
+  if (src.includes("../assets/")) return src;
+
+  // Si tiene assets sin ../, lo ajusta
+  if (src.includes("assets/")) return "../" + src.replace(/^\.?\//, "");
+
+  return "../assets/img/" + src;
 }
 
-/* Obtiene ?id=... */
 function getIdFromURL() {
   const params = new URLSearchParams(location.search);
   return params.get("id");
 }
 
-/* Toast */
 function mostrarMensaje(texto = "Producto agregado con éxito 💚") {
   let aviso = document.getElementById("mensaje-exito");
   if (!aviso) {
@@ -26,8 +30,8 @@ function mostrarMensaje(texto = "Producto agregado con éxito 💚") {
   setTimeout(() => aviso.classList.remove("visible"), 2500);
 }
 
-/* Productos: usa lo guardado o data.js */
 const productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+
 
 function renderDetalle() {
   const id = getIdFromURL();
@@ -40,7 +44,7 @@ function renderDetalle() {
     return;
   }
 
-  // 👇 acá mapeamos "descripcion" como "Material" si no existe "material"
+  // Usa descripción como material si no hay campo propio
   const materialTxt = prod.material ?? prod.descripcion ?? "—";
 
   cont.innerHTML = `
@@ -63,6 +67,7 @@ function renderDetalle() {
     </article>
   `;
 
+  // Evento para agregar al carrito
   const btn = document.getElementById("btnAgregarDetalle");
   if (btn) {
     btn.addEventListener("click", () => {
@@ -77,7 +82,9 @@ function renderDetalle() {
   }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
   initCarrito?.();
   renderDetalle();
 });
+
