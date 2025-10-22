@@ -4,7 +4,7 @@ import { productos as datosProductos } from "./data.js";
 function resolveImg(src = "") {
   if (src.includes("../assets/")) return src;
   if (src.includes("assets/")) return "../" + src.replace(/^\.?\//, "");
-  return "../assets/img/" + src;
+  return "../assets/img/" + src.replace(/^\/+/, "").replace(/^(\.\.\/)+/, "");
 }
 
 function getIdFromURL() {
@@ -42,6 +42,7 @@ function renderDetalle() {
   }
 
   const materialTxt = prod.material ?? prod.descripcion ?? "—";
+  const stockInicial = typeof prod.stock !== "undefined" ? Number(prod.stock) : NaN;
 
   cont.innerHTML = `
     <article class="detalle-card">
@@ -51,7 +52,7 @@ function renderDetalle() {
         <p><strong>Precio:</strong> $ ${Number(prod.precio || 0).toLocaleString("es-AR")}</p>
         <p><strong>Material:</strong> ${materialTxt}</p>
         <p><strong>Categoría:</strong> ${prod.categoria ?? "—"}</p>
-        <p><strong>Stock:</strong> <span id="stock-value">${typeof prod.stock !== "undefined" ? prod.stock : "—"}</span></p>
+        <p><strong>Stock:</strong> <span id="stock-value">${Number.isNaN(stockInicial) ? "—" : stockInicial}</span></p>
       </div>
       <div class="detalle-actions">
         <button id="btnAgregarDetalle" class="btn-solid">Agregar al carrito</button>
@@ -61,17 +62,33 @@ function renderDetalle() {
   `;
 
   const btn = document.getElementById("btnAgregarDetalle");
+  const sv  = document.getElementById("stock-value");
+
+  const setBtnEstado = (stockNum) => {
+    const sinStock = Number(stockNum) <= 0 || Number.isNaN(Number(stockNum));
+    btn.disabled = sinStock;
+    btn.textContent = sinStock ? "Sin stock" : "Agregar al carrito";
+  };
+
+  setBtnEstado(stockInicial);
+
   if (btn) {
     btn.addEventListener("click", () => {
+      const cur = readProductos().find(p => String(p.id) === String(id));
+      const stockActual = cur ? Number(cur.stock || 0) : 0;
+      if (stockActual <= 0) { setBtnEstado(stockActual); mostrarMensaje("Sin stock 😕"); return; }
+
       agregarAlCarrito({
         id: prod.id,
         nombre: prod.nombre,
         precio: Number(prod.precio || 0),
         img: prod.img
       });
+
       const actualizado = readProductos().find(p => String(p.id) === String(id));
-      const sv = document.getElementById("stock-value");
-      if (sv && actualizado) sv.textContent = typeof actualizado.stock !== "undefined" ? actualizado.stock : "—";
+      const nuevoStock = actualizado ? Number(actualizado.stock ?? NaN) : NaN;
+      if (sv) sv.textContent = Number.isNaN(nuevoStock) ? "—" : nuevoStock;
+      setBtnEstado(nuevoStock);
       mostrarMensaje("Producto agregado con éxito 💚");
     });
   }
@@ -79,8 +96,9 @@ function renderDetalle() {
   window.addEventListener("storage", (e) => {
     if (e.key === "productos") {
       const actualizado = readProductos().find(p => String(p.id) === String(id));
-      const sv = document.getElementById("stock-value");
-      if (sv && actualizado) sv.textContent = typeof actualizado.stock !== "undefined" ? actualizado.stock : "—";
+      const nuevoStock = actualizado ? Number(actualizado.stock ?? NaN) : NaN;
+      if (sv) sv.textContent = Number.isNaN(nuevoStock) ? "—" : nuevoStock;
+      setBtnEstado(nuevoStock);
     }
   });
 }
@@ -89,4 +107,3 @@ document.addEventListener("DOMContentLoaded", () => {
   initCarrito?.();
   renderDetalle();
 });
-
