@@ -101,6 +101,26 @@ function mostrarCarrito() {
   cont.appendChild(pTotal);
 }
 
+function vaciarCarrito(){
+  const cart = readCart();
+  if (!cart.length){ updateBadges([]); return; }
+
+  // devuelve stock por cada ítem del carrito
+  const devolver = cart.reduce((acc, it) => {
+    const id = String(it.id);
+    acc[id] = (acc[id] || 0) + Number(it.cantidad || 1);
+    return acc;
+  }, {});
+
+  Object.entries(devolver).forEach(([id, qty]) => {
+    ajustarStockProducto(id, +qty);
+  });
+
+  writeCart([]);
+  updateBadges([]);
+}
+
+
 function renderCart(){
   const tbody = document.getElementById("cart-body");
   const vacio = document.getElementById("cart-empty");
