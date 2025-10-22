@@ -1,5 +1,3 @@
-document.addEventListener("DOMContentLoaded", mostrarCarrito);
-
 function readCart() {
   try { return JSON.parse(localStorage.getItem("carrito") || "[]"); }
   catch { return []; }
@@ -27,6 +25,23 @@ const normImg = (src = "") => {
 };
 const sanImg = (src = "") =>
   (src || "").replace(/^\/+assets\//, "assets/").replace(/^(\.\.\/)+assets\//, "assets/");
+
+// helpers de stock
+function readProductos() {
+  try { return JSON.parse(localStorage.getItem("productos") || "[]"); }
+  catch { return []; }
+}
+function writeProductos(arr) {
+  localStorage.setItem("productos", JSON.stringify(arr));
+}
+function ajustarStockProducto(id, delta) {
+  const productos = readProductos();
+  const i = productos.findIndex(p => String(p.id) === String(id));
+  if (i === -1) return;
+  const next = Number(productos[i].stock || 0) + Number(delta || 0);
+  productos[i].stock = next < 0 ? 0 : next;
+  writeProductos(productos);
+}
 
 function agregarAlCarrito(prod){
   const cart = readCart();
@@ -148,3 +163,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export { initCarrito, agregarAlCarrito };
+
