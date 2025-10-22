@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", mostrarCarrito);
 
-// === Utils ===
 function readCart() {
   try { return JSON.parse(localStorage.getItem("carrito") || "[]"); }
   catch { return []; }
@@ -18,9 +17,18 @@ function updateBadges(items){
   if (badge) badge.textContent = count;
 }
 
-// === API pública ===
+const normImg = (src = "") => {
+  if (/^https?:\/\//i.test(src)) return src;
+  const inPages = location.pathname.includes("/pages/");
+  let s = src.replace(/^\/+/, "").replace(/^(\.\.\/)+/, "");
+  if (s.startsWith("assets/img/")) return inPages ? ("../" + s) : s;
+  const base = inPages ? "../assets/img/" : "assets/img/";
+  return base + s.replace(/^.*img\//, "");
+};
+const sanImg = (src = "") =>
+  (src || "").replace(/^\/+assets\//, "assets/").replace(/^(\.\.\/)+assets\//, "assets/");
+
 function agregarAlCarrito(prod){
-  // prod: { id, nombre, precio (number), img }
   const cart = readCart();
   const idx = cart.findIndex(i => String(i.id) === String(prod.id));
   if (idx >= 0) {
@@ -30,7 +38,7 @@ function agregarAlCarrito(prod){
       id: prod.id,
       nombre: prod.nombre,
       precio: Number(prod.precio) || 0,
-      img: prod.img || "",
+      img: sanImg(prod.img || ""),
       cantidad: 1
     });
   }
@@ -47,19 +55,15 @@ function initCarrito() {
   });
 }
 
-// === Render versión SIMPLE (div#contCarrito) ===
 function mostrarCarrito() {
   const cont = document.getElementById("contCarrito");
-  if (!cont) return; // si no existe, no renderizamos esta versión
-
+  if (!cont) return;
   const carrito = readCart();
   cont.innerHTML = "";
-
   if (carrito.length === 0) {
-    cont.innerHTML = "<p>Tu carrito está vacío.</p>"; // <-- typo corregido
+    cont.innerHTML = "<p>Tu carrito está vacío.</p>";
     return;
   }
-
   carrito.forEach(item => {
     const div = document.createElement("div");
     div.className = "itemCarrito";
@@ -70,21 +74,17 @@ function mostrarCarrito() {
     `;
     cont.appendChild(div);
   });
-
   const total = carrito.reduce((acc, item) => acc + Number(item.precio||0) * Number(item.cantidad||1), 0);
   const pTotal = document.createElement("p");
   pTotal.innerHTML = `<strong>Total</strong>: $ ${money(total)}`;
   cont.appendChild(pTotal);
 }
 
-// === Render versión TABLA (tbody#cart-body + resumen) ===
 function renderCart(){
   const tbody = document.getElementById("cart-body");
   const vacio = document.getElementById("cart-empty");
   const itemsEl = document.getElementById("resumen-items");
   const totalEl = document.getElementById("resumen-total");
-
-  // Si no están estos nodos, no es la versión tabla
   if (!tbody || !vacio || !itemsEl || !totalEl) return;
 
   const cart = readCart();
@@ -100,26 +100,25 @@ function renderCart(){
   vacio.hidden = true;
 
   tbody.innerHTML = cart.map((p) => {
-  const precio = Number(p.precio)||0;
-  const qty = Number(p.cantidad||1);
-  const subtotal = precio * qty;
-  return `
-    <tr>
-      <td>
-        <div class="prod">
-          <img src="${p.img || '../assets/img/placeholder.png'}" alt="${p.nombre || 'Producto'}">
-          <div>
-            <div class="name">${p.nombre || 'Producto'}</div>
+    const precio = Number(p.precio)||0;
+    const qty = Number(p.cantidad||1);
+    const subtotal = precio * qty;
+    return `
+      <tr>
+        <td>
+          <div class="prod">
+            <img src="${normImg(p.img || 'placeholder.png')}" alt="${p.nombre || 'Producto'}">
+            <div>
+              <div class="name">${p.nombre || 'Producto'}</div>
+            </div>
           </div>
-        </div>
-      </td>
-      <td class="num">$ ${money(precio)}</td>
-      <td class="center">${qty}</td>
-      <td class="num"><strong>$ ${money(subtotal)}</strong></td>
-    </tr>
-  `;
-}).join("");
-
+        </td>
+        <td class="num">$ ${money(precio)}</td>
+        <td class="center">${qty}</td>
+        <td class="num"><strong>$ ${money(subtotal)}</strong></td>
+      </tr>
+    `;
+  }).join("");
 
   const itemsCount = cart.reduce((acc, it) => acc + Number(it.cantidad||1), 0);
   const total = cart.reduce((acc, it) => acc + (Number(it.precio)||0) * Number(it.cantidad||1), 0);
@@ -127,23 +126,19 @@ function renderCart(){
   totalEl.textContent = `$ ${money(total)}`;
 }
 
-
-// === Boot ===
 document.addEventListener("DOMContentLoaded", () => {
   initCarrito();
-  mostrarCarrito(); // render simple si existe #contCarrito
-  renderCart();     // render tabla si existen nodos de tabla
-
-  // === MENU HAMBURGUESA === 
+  mostrarCarrito();
+  renderCart();
   const hamburger = document.querySelector(".hamburger");
   const nav = document.querySelector(".nav-links");
-
-  hamburger.addEventListener("click", () => {
-    nav.classList.toggle("active");
-    const expanded = hamburger.getAttribute("aria-expanded") === "true";
-    hamburger.setAttribute("aria-expanded", !expanded);
-  });
+  if (hamburger && nav) {
+    hamburger.addEventListener("click", () => {
+      nav.classList.toggle("active");
+      const expanded = hamburger.getAttribute("aria-expanded") === "true";
+      hamburger.setAttribute("aria-expanded", !expanded);
+    });
+  }
 });
 
-// Export para usar desde catálogo o detalle
 export { initCarrito, agregarAlCarrito };
