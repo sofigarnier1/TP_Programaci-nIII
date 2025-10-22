@@ -2,7 +2,6 @@
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-
 const getMaterial = (p = {}) => {
   const cand = [
     p.material, p.Material, p.materiales, p.Materiales, p.mat,
@@ -11,7 +10,6 @@ const getMaterial = (p = {}) => {
   const val = cand.find(v => v !== undefined && v !== null && String(v).trim() !== "");
   return val ? String(val).trim() : "";
 };
-
 
 const stored = JSON.parse(localStorage.getItem("productos")) || [];
 const needsRefresh = stored.length === 0 || stored.some(p => getMaterial(p) === "");
@@ -25,10 +23,8 @@ let productos = (needsRefresh ? datosProductos : stored).map(p => ({
 
 localStorage.setItem("productos", JSON.stringify(productos));
 
-
 const norm = (s = "") => s.toString().toLowerCase().trim();
 const splitCats = (s = "") => norm(s).split(",").map(x => x.trim()).filter(Boolean);
-
 
 function crearTarjeta(p) {
   const art = document.createElement("div");
@@ -36,7 +32,6 @@ function crearTarjeta(p) {
   art.dataset.id = p.id;
   art.dataset.cat = norm(p.categoria);
 
-  // Ruta segura para imágenes
   const imgBase = location.pathname.includes("/pages/") ? "../assets/img/" : "assets/img/";
   const normImg = (src) =>
     src?.startsWith("http") ? src :
@@ -55,14 +50,12 @@ function crearTarjeta(p) {
   return art;
 }
 
-
 function renderCatalogo(lista) {
   const cont = document.getElementById("productos");
   if (!cont) return;
   cont.innerHTML = "";
   lista.forEach(p => cont.appendChild(crearTarjeta(p)));
 }
-
 
 function filtrarPorCategoria(valor) {
   const catSel = norm(valor);
@@ -83,11 +76,14 @@ function aplicarFiltro() {
   filtrarPorCategoria(valor);
 }
 
+function readProductos() {
+  try { return JSON.parse(localStorage.getItem("productos")) || datosProductos; }
+  catch { return datosProductos; }
+}
 
 function initCatalogo() {
   renderCatalogo(productos);
 
-  // Filtro desde URL
   const params = new URLSearchParams(location.search);
   const catURL = params.get("cat");
   const sel = document.getElementById("categoria");
@@ -96,33 +92,40 @@ function initCatalogo() {
     aplicarFiltro();
   }
 
-  // Eventos de filtros
   if (sel) sel.addEventListener("change", aplicarFiltro);
   const btn = document.getElementById("aplicar");
   if (btn) btn.addEventListener("click", aplicarFiltro);
 
-  // Delegación de eventos
   const cont = document.getElementById("productos");
   if (cont) {
     cont.addEventListener("click", (e) => {
-      // Agregar al carrito
       const addBtn = e.target.closest(".btnCarrito");
       if (addBtn) {
         const card = addBtn.closest(".producto");
         const id = card?.dataset.id;
         const prod = productos.find(x => String(x.id) === String(id));
         if (!prod) return;
+
+        const stockDisp = Number(prod.stock ?? 0);
+        if (stockDisp <= 0) {
+          mostrarMensaje("Sin stock 😕");
+          return;
+        }
+
         agregarAlCarrito({
           id: prod.id,
           nombre: prod.nombre,
           precio: prod.precio,
           img: prod.img
         });
+
+        productos = readProductos();           // <- refresca productos con stock actualizado
+        const valorFiltro = sel ? sel.value : "all";
+        filtrarPorCategoria(valorFiltro);      // <- re-render con el filtro vigente
         mostrarMensaje("Producto agregado con éxito 💚");
         return;
       }
 
-      // Ver detalles
       const detBtn = e.target.closest(".btnDetalle");
       if (detBtn) {
         const card = detBtn.closest(".producto");
@@ -137,7 +140,6 @@ function initCatalogo() {
     });
   }
 
-  // Actualiza contador carrito
   initCarrito();
 }
 
@@ -147,8 +149,6 @@ if (document.readyState === "loading") {
   initCatalogo();
 }
 
-
-// Mensaje de confirmación
 function mostrarMensaje(texto = "Agregado con éxito 💚") {
   let aviso = document.getElementById("mensaje-exito");
   if (!aviso) {
@@ -156,9 +156,7 @@ function mostrarMensaje(texto = "Agregado con éxito 💚") {
     aviso.id = "mensaje-exito";
     document.body.appendChild(aviso);
   }
-
   aviso.textContent = texto;
   aviso.classList.add("visible");
-
   setTimeout(() => aviso.classList.remove("visible"), 2500);
 }
