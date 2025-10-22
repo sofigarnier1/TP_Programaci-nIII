@@ -1,12 +1,13 @@
-
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-
 let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
+productos = productos.map(p => ({
+  ...p,
+  img: (p.img || "").replace(/^\/+assets\//, "assets/").replace(/^(\.\.\/)+assets\//, "assets/"),
+  precio: Number(p.precio) || 0
+}));
 localStorage.setItem("productos", JSON.stringify(productos));
-
 
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
@@ -24,12 +25,14 @@ function tarjetaDestacada(p) {
   art.className = "producto";
   art.dataset.id = p.id;
 
-  // Ajuste dinámico de ruta de imagen (funciona desde index y desde pages/)
-  const imgBase = location.pathname.includes("/pages/") ? "../assets/img/" : "assets/img/";
-  const normImg = (src) =>
-    src?.startsWith("http") ? src :
-    src?.includes("/assets/img/") ? src :
-    imgBase + src.replace(/^.*img\//, "");
+  const normImg = (src = "") => {
+    if (/^https?:\/\//i.test(src)) return src;
+    const inPages = location.pathname.includes("/pages/");
+    let s = src.replace(/^\/+/, "").replace(/^(\.\.\/)+/, "");
+    if (s.startsWith("assets/img/")) return inPages ? ("../" + s) : s;
+    const base = inPages ? "../assets/img/" : "assets/img/";
+    return base + s.replace(/^.*img\//, "");
+  };
 
   art.innerHTML = `
     <h3>${p.nombre}</h3>
@@ -72,7 +75,6 @@ function initIndex() {
       const card = btnDet.closest(".producto");
       const id = card?.dataset.id;
       if (id) {
-        // Detecta si estás en index o en /pages/
         const detalleBase = location.pathname.includes("/pages/")
           ? "producto.html"
           : "pages/producto.html";
@@ -81,7 +83,6 @@ function initIndex() {
     }
   });
 
-  // Contador del nav
   initCarrito();
 }
 
@@ -90,4 +91,5 @@ if (document.readyState === "loading") {
 } else {
   initIndex();
 }
+
 
