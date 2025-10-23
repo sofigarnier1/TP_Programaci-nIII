@@ -563,7 +563,7 @@ footer p {
 .btn-ghost:hover{ background: var(--cream-2, #fbf7f2); }
 .btn-ghost:active{ transform: translateY(1px); }
 
-/* Toast de éxito (si no lo tenés aún en este CSS) */
+/* Toast de éxito */
 #mensaje-exito {
   position: fixed;
   bottom: 30px;
@@ -584,3 +584,16 @@ footer p {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+#btnVaciar {
+  background-color: #fff0f0;
+  color: #b30000;
+  border: 1px solid #ffb3b3;
+  transition: 0.2s ease;
+}
+
+#btnVaciar:hover {
+  background-color: #ffb3b3;
+  color: white;
+}
+
