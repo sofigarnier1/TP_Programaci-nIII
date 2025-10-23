@@ -395,32 +395,6 @@ main { margin-top: 10px; }
   flex-wrap:wrap; margin:0;
 }
 
-/* =========================
-   FOOTER
-   ========================= */
-/* layout para que el footer quede al fondo */
-html, body { height: 100%; }
-body { min-height: 100vh; display: flex; flex-direction: column; }
-main { flex: 1; }
-
-footer {
-  background: #9EE6AF;            
-  padding: 16px 0;
-  box-shadow: 0 -2px 10px rgba(0,0,0,.06);
-}
-footer .bar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-footer p {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  color: #0b3b2e;                 
-}
 
 /* =========================
    CARRITO (mantengo lo tuyo, prolijo)
@@ -597,3 +571,30 @@ footer p {
   color: white;
 }
 
+
+/* =========================
+   FOOTER
+   ========================= */
+/* layout para que el footer quede al fondo */
+html, body { height: 100%; }
+body { min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1; }
+
+footer {
+  background: #9EE6AF;            
+  padding: 16px 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,.06);
+}
+footer .bar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+footer p {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #0b3b2e;                 
+}
