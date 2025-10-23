@@ -19,16 +19,6 @@ function mostrarMensaje(texto = "Producto agregado con éxito 💚") {
   if (!aviso) {
     aviso = document.createElement("div");
     aviso.id = "mensaje-exito";
-    aviso.style.position = "fixed";
-    aviso.style.bottom = "20px";
-    aviso.style.left = "50%";
-    aviso.style.transform = "translateX(-50%)";
-    aviso.style.background = "#4d94a4";
-    aviso.style.color = "#fff";
-    aviso.style.padding = "10px 20px";
-    aviso.style.borderRadius = "8px";
-    aviso.style.fontFamily = "Montserrat, sans-serif";
-    aviso.style.zIndex = "9999";
     document.body.appendChild(aviso);
   }
   aviso.textContent = texto;
