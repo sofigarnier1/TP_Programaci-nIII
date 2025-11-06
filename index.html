@@ -11,49 +11,52 @@
 <body>
 
   <!-- NAV -->
-<header>
-  <nav>
-    <div class="bar-inner">
-      <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+  <header>
+    <nav>
+      <div class="bar-inner">
+        <!-- botón hamburguesa (siempre visible) -->
+        <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
 
-      <div class="nav-links">
-        <a href="index.html">Inicio</a>
-        <a href="pages/productos.html">Productos</a>
-        <a href="pages/contacto.html">Contactos</a>
-        <a href="pages/carrito.html" id="nav-cart">🛒 (0)</a>
+        <!-- links de navegación -->
+        <div class="nav-links">
+          <a href="index.html">Inicio</a>
+          <a href="pages/productos.html">Productos</a>
+          <a href="pages/contacto.html">Contactos</a>
+          <a href="pages/carrito.html" id="nav-cart">🛒 (0)</a>
+        </div>
       </div>
+    </nav>
+  </header>
+
+  <!-- CONTENIDO -->
+  <main>
+    <section id="hero" class="container">
+      <img class="logo" src="assets/img/3.png" alt="Logo Sabina Accesorios">
+      <h1>Bienvenidos a Sabina Accesorios</h1>
+      <p>Accesorios que acompañan tu <strong>look 💋</strong></p>
+    </section>
+
+    <!-- Destacados -->
+    <section class="container">
+      <h2 id="destacados-titulo">Los productos más pedidos 🔥</h2>
+      <div id="destacados"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="bar-inner">
+      <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
     </div>
-  </nav>
-</header>
-
-
-    <!-- CONTENIDO -->
-    <main>
-      <section id="hero" class="container">
-        <img class="logo" src="./assets/img/3.png" alt="Logo Sabina Accesorios">
-        <h1>Bienvenidos a Sabina Accesorios</h1>
-        <p>Accesorios que acompañan tu <strong>look 💋</strong></p>
-      </section>
-
-      <!-- Destacados -->
-      <section class="container">
-        <h2 id="destacados-titulo">Los productos más pedidos 🔥</h2>
-        <div id="destacados"></div>
-      </section>
-    </main>
-
-<footer>
-  <div class="bar-inner">
-    <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
-  </div>
-</footer>
+  </footer>
 
   <!-- Script del inicio -->
-  <script type="module" src="./assets/js/index.js"></script>
+  <script type="module" src="assets/js/index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>
+
+
 

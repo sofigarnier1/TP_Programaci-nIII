@@ -1,4 +1,3 @@
-
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
@@ -13,7 +12,6 @@ productos = productos.map((p) => ({
 }));
 
 localStorage.setItem("productos", JSON.stringify(productos));
-
 
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
@@ -43,14 +41,10 @@ function tarjetaDestacada(p) {
   return art;
 }
 
-// =====================
-// Inicialización global
-// =====================
-
 function initIndex() {
-  // 1) NAV + HAMBURGUESA → SIEMPRE, en TODAS las páginas
+  /* 1) NAV + HAMBURGUESA */
   const hamburger = document.querySelector(".hamburger");
-  const navLinks = document.querySelector(".nav-links");
+  const navLinks  = document.querySelector(".nav-links");
 
   if (hamburger && navLinks) {
     hamburger.addEventListener("click", () => {
@@ -59,19 +53,16 @@ function initIndex() {
     });
   }
 
-  // 2) CARRO EN NAV → SIEMPRE, en TODAS las páginas
+  /* 2) CARRO EN NAV */
   try {
     initCarrito();
   } catch (e) {
     console.error("Error al inicializar carrito:", e);
   }
 
-  // 3) DESTACADOS → SOLO en el inicio (donde existe #destacados)
+  /* 3) DESTACADOS (solo en el inicio) */
   const cont = document.getElementById("destacados");
-  if (!cont) {
-    // No estamos en el inicio, no hago nada más
-    return;
-  }
+  if (!cont) return;
 
   const destacados = tomarAleatorios(productos, 2);
   cont.innerHTML = "";
@@ -81,7 +72,7 @@ function initIndex() {
     const btnAdd = e.target.closest(".btnCarrito");
     if (btnAdd) {
       const card = btnAdd.closest(".producto");
-      const id = card?.dataset.id;
+      const id   = card?.dataset.id;
       const prod = productos.find((x) => String(x.id) === String(id));
       if (!prod) return;
 
@@ -92,7 +83,6 @@ function initIndex() {
         img: prod.img,
       });
 
-      // SweetAlert solo cuando está disponible
       if (typeof Swal !== "undefined") {
         Swal.fire({
           title: "¡Producto agregado!",
@@ -103,19 +93,16 @@ function initIndex() {
           color: "#000",
           timer: 1800,
           showConfirmButton: false,
-          customClass: {
-            popup: "sabina-success",
-          },
+          customClass: { popup: "sabina-success" },
         });
       }
-
       return;
     }
 
     const btnDet = e.target.closest(".btnDetalle");
     if (btnDet) {
       const card = btnDet.closest(".producto");
-      const id = card?.dataset.id;
+      const id   = card?.dataset.id;
       if (id) {
         const detalleBase = location.pathname.includes("/pages/")
           ? "producto.html"
@@ -125,10 +112,6 @@ function initIndex() {
     }
   });
 }
-
-// =====================
-// Disparar cuando cargue
-// =====================
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initIndex);
