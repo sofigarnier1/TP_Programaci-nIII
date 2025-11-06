@@ -114,8 +114,23 @@ function aplicarFiltro() {
 
 // --- Inicialización general ---
 function initCatalogo() {
+  // 1) NAV: hamburguesa + toggle de menú
+  const hamburger = document.querySelector(".hamburger");
+  const navLinks = document.querySelector(".nav-links");
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", () => {
+      // misma lógica que en index.js
+      const abierto = navLinks.classList.toggle("nav-open");
+      navLinks.classList.toggle("active", abierto);
+      hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
+    });
+  }
+
+  // 2) Render inicial del catálogo
   renderCatalogo(productos);
 
+  // 3) Filtro por categoría (select + botón Aplicar)
   const params = new URLSearchParams(location.search);
   const catURL = params.get("cat");
   const sel = document.getElementById("categoria");
@@ -130,6 +145,7 @@ function initCatalogo() {
   const btn = document.getElementById("aplicar");
   if (btn) btn.addEventListener("click", aplicarFiltro);
 
+  // 4) Clicks en tarjetas: agregar al carrito / ver detalle
   const cont = document.getElementById("productos");
   if (cont) {
     cont.addEventListener("click", (e) => {
@@ -166,9 +182,11 @@ function initCatalogo() {
     });
   }
 
+  // 5) Badge del carrito y sincronización de stock
   initCarrito();
 }
 
+// Boot
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCatalogo);
 } else {
