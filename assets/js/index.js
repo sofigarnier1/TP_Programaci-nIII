@@ -43,7 +43,7 @@ function tarjetaDestacada(p) {
   art.dataset.id = p.id;
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${normImg(p.img)}" alt="${p.nombre}" height="400" width="400">
+    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -116,7 +116,7 @@ function initIndex() {
       hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
     });
   }
-  
+
   initCarrito();
 }
 
