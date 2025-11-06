@@ -1,7 +1,7 @@
+
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-// --- helper robusto para material ---
 const getMaterial = (p = {}) => {
   const cand = [
     p.material, p.Material, p.materiales, p.Materiales, p.mat,
@@ -11,21 +11,17 @@ const getMaterial = (p = {}) => {
   return val ? String(val).trim() : "";
 };
 
-// ——— Cargar del storage (si existe) ———
 const stored = JSON.parse(localStorage.getItem("productos")) || [];
-
-// Si falta el campo material en alguno, forzamos refresh desde data.js
 const needsRefresh = stored.length === 0 || stored.some(p => getMaterial(p) === "");
 
-// Base: si hay que refrescar, usamos datosProductos; si no, lo guardado
-let productosBase = needsRefresh ? datosProductos : stored;
-
-let productos = (JSON.parse(localStorage.getItem("productos")) || datosProductos).map(p => ({
+let productos = (needsRefresh ? datosProductos : stored).map(p => ({
   ...p,
   precio: Number(p.precio) || 0,
   categoria: (p.categoria || "").toString(),
   material: p.material ?? p.descripcion ?? "—"
+  material: p.material ?? p.descripcion ?? "—"
 }));
+
 localStorage.setItem("productos", JSON.stringify(productos));
 
 // Helpers
@@ -69,10 +65,17 @@ function crearTarjeta(p) {
   const art = document.createElement("div");
   art.className = "producto";
   art.dataset.id = p.id;
-  art.dataset.cat = norm(p.categoria); // <-- clave para el filtro
+  art.dataset.cat = norm(p.categoria);
+
+  const imgBase = location.pathname.includes("/pages/") ? "../assets/img/" : "assets/img/";
+  const normImg = (src) =>
+    src?.startsWith("http") ? src :
+    src?.includes("/assets/img/") ? src :
+    imgBase + src.replace(/^.*img\//, "");
+
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
+    <img src="${normImg(p.img)}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -82,7 +85,6 @@ function crearTarjeta(p) {
   return art;
 }
 
-// 3) Render catálogo
 function renderCatalogo(lista) {
   const cont = document.getElementById("productos");
   if (!cont) return;
@@ -90,7 +92,6 @@ function renderCatalogo(lista) {
   lista.forEach(p => cont.appendChild(crearTarjeta(p)));
 }
 
-// 4) Filtrado
 function filtrarPorCategoria(valor) {
   const catSel = norm(valor);
   if (catSel === "all" || catSel === "todas" || !catSel) {
@@ -98,7 +99,7 @@ function filtrarPorCategoria(valor) {
     return;
   }
   const filtrados = productos.filter(p => {
-    const cats = splitCats(p.categoria); // soporta "aros, collares"
+    const cats = splitCats(p.categoria);
     return cats.includes(catSel);
   });
   renderCatalogo(filtrados);
@@ -110,12 +111,14 @@ function aplicarFiltro() {
   filtrarPorCategoria(valor);
 }
 
-// 5) Init
+function readProductos() {
+  try { return JSON.parse(localStorage.getItem("productos")) || datosProductos; }
+  catch { return datosProductos; }
+}
+
 function initCatalogo() {
-  // Render inicial
   renderCatalogo(productos);
 
-  // Preselección por URL: ?cat=aros
   const params = new URLSearchParams(location.search);
   const catURL = params.get("cat");
   const sel = document.getElementById("categoria");
@@ -124,18 +127,15 @@ function initCatalogo() {
     aplicarFiltro();
   }
 
-  // Filtro automático al cambiar
   if (sel) sel.addEventListener("change", aplicarFiltro);
 
   // (Opcional) Botón "Aplicar"
   const btn = document.getElementById("aplicar");
   if (btn) btn.addEventListener("click", aplicarFiltro);
 
-  // Delegación de clicks (agregar al carrito / ver detalles)
   const cont = document.getElementById("productos");
   if (cont) {
     cont.addEventListener("click", (e) => {
-      // Agregar al carrito
       const addBtn = e.target.closest(".btnCarrito");
       if (addBtn) {
         const card = addBtn.closest(".producto");
@@ -155,21 +155,23 @@ function initCatalogo() {
         return;
       }
 
-      // Ver detalles
       const detBtn = e.target.closest(".btnDetalle");
       if (detBtn) {
         const card = detBtn.closest(".producto");
         const id = card?.dataset.id;
-        if (id) location.href = `producto.html?id=${id}`;
+        if (id) {
+          const detalleBase = location.pathname.includes("/pages/")
+            ? "producto.html"
+            : "pages/producto.html";
+          location.href = `${detalleBase}?id=${id}`;
+        }
       }
     });
   }
 
-  // Contador del nav
   initCarrito();
 }
 
-// Boot
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCatalogo);
 } else {

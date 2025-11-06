@@ -1,13 +1,12 @@
-import { productos as datosProductos } from "./data.js";
 import { agregarAlCarrito, initCarrito } from "./carrito.js";
+import { productos as datosProductos } from "./data.js";
 
-/* Normaliza ruta de imagen para /pages/ */
 function resolveImg(src = "") {
-  if (src.startsWith("../")) return src;
-  return "../" + src.replace(/^\.?\//, "");
+  if (src.includes("../assets/")) return src;
+  if (src.includes("assets/")) return "../" + src.replace(/^\.?\//, "");
+  return "../assets/img/" + src.replace(/^\/+/, "").replace(/^(\.\.\/)+/, "");
 }
 
-/* Obtiene ?id=... */
 function getIdFromURL() {
   const params = new URLSearchParams(location.search);
   return params.get("id");
@@ -68,6 +67,7 @@ function renderDetalle() {
   const cont = document.getElementById("detalleProducto");
   if (!cont) return;
 
+  const productos = readProductos();
   const prod = productos.find(p => String(p.id) === String(id));
   if (!prod) {
     cont.innerHTML = `<p style="text-align:center">Producto no encontrado.</p>`;
@@ -80,20 +80,18 @@ function renderDetalle() {
   let disponible = Math.max(0, Number(prod.stock || 0) - (Number(enCarrito?.cantidad || 0)));
 
   const materialTxt = prod.material ?? prod.descripcion ?? "—";
+  const stockInicial = typeof prod.stock !== "undefined" ? Number(prod.stock) : NaN;
 
   cont.innerHTML = `
     <article class="detalle-card">
       <h1>${prod.nombre}</h1>
-
       <img class="detalle-img" src="${resolveImg(prod.img)}" alt="${prod.nombre}">
-
       <div class="detalle-info">
         <p><strong>Precio:</strong> $ ${Number(prod.precio || 0).toLocaleString("es-AR")}</p>
         <p><strong>Material:</strong> ${materialTxt}</p>
         <p><strong>Categoría:</strong> ${prod.categoria ?? "—"}</p>
         <p><strong>Stock:</strong> <span id="stockDisp">${disponible}</span></p>
       </div>
-
       <div class="detalle-actions">
         <button id="btnAgregarDetalle" class="btn btn-primary">Agregar al carrito</button>
         <a href="productos.html" class="btn btn-sec no-underline">Volver al catálogo</a>
@@ -136,6 +134,15 @@ function renderDetalle() {
       avisarAgregado(prod.nombre);
     });
   }
+
+  window.addEventListener("storage", (e) => {
+    if (e.key === "productos") {
+      const actualizado = readProductos().find(p => String(p.id) === String(id));
+      const nuevoStock = actualizado ? Number(actualizado.stock ?? NaN) : NaN;
+      if (sv) sv.textContent = Number.isNaN(nuevoStock) ? "—" : nuevoStock;
+      setBtnEstado(nuevoStock);
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

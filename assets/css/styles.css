@@ -578,7 +578,7 @@ footer {
 }
 .detalle-actions .btn-sec:active { transform: translateY(1px); }
 
-/* Toast de éxito (si no lo tenés aún en este CSS) */
+/* Toast de éxito */
 #mensaje-exito {
   position: fixed;
   bottom: 30px;

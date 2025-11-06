@@ -2,8 +2,29 @@ import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
 let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
+productos = productos.map(p => ({
+  ...p,
+  img: (p.img || "").replace(/^\/+assets\//, "assets/").replace(/^(\.\.\/)+assets\//, "assets/"),
+  precio: Number(p.precio) || 0
+}));
 localStorage.setItem("productos", JSON.stringify(productos));
+
+function readProductos() {
+  try { return JSON.parse(localStorage.getItem("productos")) || datosProductos; }
+  catch { return datosProductos; }
+}
+
+function mostrarMensaje(texto = "Producto agregado con éxito 💚") {
+  let aviso = document.getElementById("mensaje-exito");
+  if (!aviso) {
+    aviso = document.createElement("div");
+    aviso.id = "mensaje-exito";
+    document.body.appendChild(aviso);
+  }
+  aviso.textContent = texto;
+  aviso.style.opacity = "1";
+  setTimeout(() => (aviso.style.opacity = "0"), 2000);
+}
 
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
@@ -22,7 +43,7 @@ function tarjetaDestacada(p) {
   art.dataset.id = p.id;
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
+    <img src="${normImg(p.img)}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -40,7 +61,6 @@ function initIndex() {
   cont.innerHTML = "";
   destacados.forEach(p => cont.appendChild(tarjetaDestacada(p)));
 
-  // 🔹 Delegación de clicks: agregar al carrito / ver detalles
   cont.addEventListener("click", (e) => {
     const btnAdd = e.target.closest(".btnCarrito");
     if (btnAdd) {
@@ -78,11 +98,15 @@ function initIndex() {
     if (btnDet) {
       const card = btnDet.closest(".producto");
       const id = card?.dataset.id;
-      if (id) location.href = `/pages/producto.html?id=${id}`;
+      if (id) {
+        const detalleBase = location.pathname.includes("/pages/")
+          ? "producto.html"
+          : "pages/producto.html";
+        location.href = `${detalleBase}?id=${id}`;
+      }
     }
   });
 
-  // contador del nav
   initCarrito();
 }
 
