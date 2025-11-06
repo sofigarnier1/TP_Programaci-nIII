@@ -9,17 +9,21 @@ function normImg(path) {
   if (!path) return "";
   let clean = String(path).trim();
 
-  // saco ./, / o ../ del principio
+  // limpio ./, / o ../ del principio
   clean = clean.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
-  // ahora clean debería ser: "assets/img/loquesea.jpg"
 
-  // si la página está dentro de /pages/, tengo que subir un nivel
-  const enSubcarpeta = location.pathname.includes("/pages/");
-  if (enSubcarpeta) {
-    return "../" + clean;
+  // Si ya viene con assets/ (assets/img/loquesea.jpeg), la dejo así
+  if (clean.startsWith("assets/")) {
+    return clean;
   }
-  // si estoy en la raíz, va directo
-  return clean;
+
+  // Si viene como "img/aros.jpeg", le saco el "img/"
+  if (clean.startsWith("img/")) {
+    clean = clean.replace(/^img\//, "");
+  }
+
+  // Si viene solo "aros.jpeg", le agrego la carpeta correcta
+  return "assets/img/" + clean;
 }
 
 /* =========================
@@ -48,7 +52,7 @@ function cargarProductos() {
       .toString()
       .trim()
       .replace(/^(\.\/|\/)+/, "")
-      .replace(/^(\.\.\/)+/, ""); // deja "assets/img/..."
+      .replace(/^(\.\.\/)+/, ""); // dejo algo tipo "assets/img/..." o "aros.jpeg"
 
     return {
       ...p,
@@ -60,15 +64,14 @@ function cargarProductos() {
   // Guardo de nuevo en localStorage ya corregidos
   localStorage.setItem("productos", JSON.stringify(normalizados));
 
-  // Debug suave por si algo falla con las imágenes
+  // Debug: imprimo rutas en consola
   if (normalizados.length) {
     console.log("Productos cargados en index:", normalizados);
-    console.log(
-      "Ejemplo ruta imagen normalizada:",
-      normalizados[0].img,
-      "→ src real:",
-      normImg(normalizados[0].img)
-    );
+    normalizados.forEach((p) => {
+      console.log(
+        `Ruta normalizada: ${p.img} → src final: ${normImg(p.img)}`
+      );
+    });
   }
 
   return normalizados;
@@ -197,3 +200,4 @@ if (document.readyState === "loading") {
 } else {
   initIndex();
 }
+
