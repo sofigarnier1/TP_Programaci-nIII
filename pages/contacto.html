@@ -25,62 +25,18 @@
       background-color: #fff;
       color: #000;
     }
-
-    .header-logo {
-      text-align: center;
-      padding: 16px 0 0;
-    }
-
-    .header-logo .logo-sb {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    main {
-      padding: 2rem 1rem 3rem;
-    }
-
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-    }
-
-    .sabina-header {
-      background: #70e686;
-      border-bottom: 1px solid rgba(0,0,0,.05);
-    }
-
-    .sabina-header h2 {
-      margin: 0;
-      font-size: 1rem;
-      letter-spacing: .03em;
-      text-transform: uppercase;
-    }
-
-    .contact-info i {
-      color: #70e686;
-      margin-right: .5rem;
-    }
-
-    .contact-info a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .contact-info a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      padding: 1.5rem 0;
-      text-align: center;
-      font-size: .9rem;
-      color: #555;
-      border-top: 1px solid #eee;
-    }
+    .header-logo { text-align: center; padding: 16px 0 0; }
+    .header-logo .logo-sb { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; }
+    main { padding: 2rem 1rem 3rem; }
+    h1 { font-family: 'Playfair Display', serif; font-weight: 700; margin-bottom: 1.5rem; }
+    .sabina-header { background: #70e686; border-bottom: 1px solid rgba(0,0,0,.05); }
+    .sabina-header h2 { margin: 0; font-size: 1rem; letter-spacing: .03em; text-transform: uppercase; }
+    .contact-info i { color: #70e686; margin-right: .5rem; }
+    .contact-info a { color: inherit; text-decoration: none; }
+    .contact-info a:hover { text-decoration: underline; }
+    footer { padding: 1.5rem 0; text-align: center; font-size: .9rem; color: #555; border-top: 1px solid #eee; }
+    .map-container { margin-top: 1rem; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+    iframe { width: 100%; height: 300px; border: 0; }
   </style>
 </head>
 
@@ -96,7 +52,7 @@
         <div class="nav-links">
           <a href="../index.html">Inicio</a>
           <a href="productos.html">Productos</a>
-          <a href="contacto.html">Contactos</a>
+          <a href="contacto.html" class="active">Contactos</a>
           <a href="carrito.html" id="nav-cart">🛒 (0)</a>
         </div>
       </div>
@@ -171,7 +127,7 @@
           </div>
         </div>
 
-        <!-- INFO -->
+        <!-- INFO + MAPA -->
         <div class="col-12 col-lg-6">
           <div class="card shadow-sm mb-4">
             <div class="card-header text-white sabina-header">
@@ -181,9 +137,19 @@
               <p><i class="bi bi-whatsapp"></i>
                 <a href="https://wa.me/5493442611719" target="_blank">+54 9 3442 611719</a></p>
               <p><i class="bi bi-instagram"></i>
-                <a href="https://www.instagram.com/sabina.accesorios" target="_blank">@sabina.accesorios</a></p>
+                <a href="https://www.instagram.com/sabina.accesorioss" target="_blank">@sabina.accesorios</a></p>
               <p><i class="bi bi-geo-alt"></i> Galarza 1587 - Concepción del Uruguay</p>
               <p><i class="bi bi-clock"></i> Coordinamos día y horario de retiro 💚</p>
+
+              <!-- 🗺️ Mapa de ubicación -->
+              <div class="map-container mt-3">
+                <iframe
+                  src="https://www.google.com/maps?q=Galarza+1587,+Concepción+del+Uruguay,+Entre+Ríos,+Argentina&output=embed"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -219,82 +185,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
           crossorigin="anonymous"></script>
-
-  <!-- 🔥 Confirmaciones personalizadas -->
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-
-    let silentReset = false;
-
-    // Enviar con confirmación
-    form.addEventListener('submit', (ev) => {
-      ev.preventDefault();
-
-      if (!form.checkValidity()) {
-        ev.stopPropagation();
-        form.classList.add('was-validated');
-        return;
-      }
-
-      Swal.fire({
-        title: "¿Confirmás el envío del mensaje?",
-        text: "Tu consulta será enviada a Sabina Accesorios 💌",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sí, enviar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#70e686",
-        cancelButtonColor: "#999",
-        customClass: { popup: "sabina-success" }
-      }).then((r) => {
-        if (r.isConfirmed) {
-          Swal.fire({
-            icon: "success",
-            title: "¡Mensaje enviado!",
-            text: "Gracias por contactarte con Sabina Accesorios 💚. Te responderemos a la brevedad.",
-            confirmButtonText: "Aceptar",
-            confirmButtonColor: "#70e686",
-            customClass: { popup: "sabina-success" }
-          });
-
-          silentReset = true;
-          form.reset();
-          form.classList.remove('was-validated');
-          setTimeout(() => { silentReset = false; }, 0);
-        }
-      });
-    });
-
-    // Limpiar con confirmación
-    form.addEventListener('reset', (ev) => {
-      if (silentReset) return;
-      ev.preventDefault();
-
-      Swal.fire({
-        title: "¿Querés limpiar el formulario?",
-        text: "Se borrarán todos los campos completados.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, limpiar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#70e686",
-        cancelButtonColor: "#999",
-        customClass: { popup: "sabina-success" }
-      }).then((r) => {
-        if (r.isConfirmed) {
-          silentReset = true;
-          form.reset();
-          form.classList.remove('was-validated');
-          setTimeout(() => { silentReset = false; }, 0);
-        }
-      });
-    });
-  });
-  </script>
-
-  <!-- Carrito -->
   <script type="module" src="../assets/js/carrito.js"></script>
 </body>
 </html>
