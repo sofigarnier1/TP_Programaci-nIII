@@ -5,21 +5,20 @@ import { initCarrito, agregarAlCarrito } from "./carrito.js";
    Normalizador de imágenes
    ========================= */
 
-// Normaliza rutas de imágenes para que funcionen tanto en / como en /pages/
 function normImg(path) {
   if (!path) return "";
   let clean = String(path).trim();
 
   // saco ./, / o ../ del principio
   clean = clean.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
-  // ahora clean debería ser algo tipo: "assets/img/loquesea.png"
+  // ahora clean debería ser: "assets/img/loquesea.jpg"
 
-  // si estoy en /pages/... necesito subir un nivel
+  // si la página está dentro de /pages/, tengo que subir un nivel
   const enSubcarpeta = location.pathname.includes("/pages/");
   if (enSubcarpeta) {
     return "../" + clean;
   }
-  // si estoy en index (raíz del repo) va directo
+  // si estoy en la raíz, va directo
   return clean;
 }
 
@@ -27,21 +26,55 @@ function normImg(path) {
    Productos + localStorage
    ========================= */
 
-let productos =
-  JSON.parse(localStorage.getItem("productos") || "null") || datosProductos;
+function cargarProductos() {
+  let base = null;
 
-// Limpio y normalizo las rutas de imágenes para todos los productos
-productos = productos.map((p) => ({
-  ...p,
-  // deja algo tipo "assets/img/..." (sin ./, / ni ../ adelante)
-  img: (p.img || "")
-    .trim()
-    .replace(/^(\.\/|\/)+/, "")
-    .replace(/^(\.\.\/)+/, ""),
-  precio: Number(p.precio) || 0,
-}));
+  // Leo del localStorage si existe
+  try {
+    base = JSON.parse(localStorage.getItem("productos") || "null");
+  } catch {
+    base = null;
+  }
 
-localStorage.setItem("productos", JSON.stringify(productos));
+  // Si no hay nada útil en LS, uso los del data.js
+  if (!Array.isArray(base) || base.length === 0) {
+    base = datosProductos;
+  }
+
+  // Limpio y normalizo las rutas + precio
+  const normalizados = base.map((p) => {
+    const precioNum = Number(p.precio) || 0;
+    const imgLimpia = (p.img || "")
+      .toString()
+      .trim()
+      .replace(/^(\.\/|\/)+/, "")
+      .replace(/^(\.\.\/)+/, ""); // deja "assets/img/..."
+
+    return {
+      ...p,
+      precio: precioNum,
+      img: imgLimpia,
+    };
+  });
+
+  // Guardo de nuevo en localStorage ya corregidos
+  localStorage.setItem("productos", JSON.stringify(normalizados));
+
+  // Debug suave por si algo falla con las imágenes
+  if (normalizados.length) {
+    console.log("Productos cargados en index:", normalizados);
+    console.log(
+      "Ejemplo ruta imagen normalizada:",
+      normalizados[0].img,
+      "→ src real:",
+      normImg(normalizados[0].img)
+    );
+  }
+
+  return normalizados;
+}
+
+const productos = cargarProductos();
 
 /* =========================
    Utilidades de inicio
@@ -63,9 +96,12 @@ function tarjetaDestacada(p) {
   const art = document.createElement("div");
   art.className = "producto";
   art.dataset.id = p.id;
+
+  const srcImg = normImg(p.img);
+
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${normImg(p.img)}" alt="${p.nombre}" height="400" width="400">
+    <img src="${srcImg}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
