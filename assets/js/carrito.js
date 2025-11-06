@@ -27,6 +27,53 @@ function writeProductos(list){
   localStorage.setItem("productos", JSON.stringify(list));
 }
 
+/* =========================
+   Helpers de imágenes y stock
+   ========================= */
+
+// Normaliza la ruta de imagen para que funcione desde /pages/carrito.html
+function sanImg(path){
+  if (!path) return "../assets/img/placeholder.png";
+
+  let clean = String(path).trim();
+  // saco ./, / o ../
+  clean = clean.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
+
+  // si ya viene con "assets/..."
+  if (clean.startsWith("assets/")) {
+    return "../" + clean; // desde /pages
+  }
+
+  // si viene como "img/archivo.jpg"
+  if (clean.startsWith("img/")) {
+    clean = clean.replace(/^img\//, "");
+  }
+
+  // si viene solo "archivo.jpg"
+  return "../assets/img/" + clean;
+}
+
+// Ajusta el stock de un producto en localStorage
+function ajustarStockProducto(prodId, delta){
+  const productos = readProductos();
+  if (!Array.isArray(productos) || !productos.length) return;
+
+  const idx = productos.findIndex(p => String(p.id) === String(prodId));
+  if (idx < 0) return;
+
+  const p = productos[idx];
+  const base = Number(p.stockBase ?? p.stock ?? 0);
+  let actual = Number(p.stock ?? base);
+  let nuevo = actual + Number(delta || 0);
+
+  if (!Number.isFinite(nuevo)) nuevo = 0;
+  if (nuevo < 0) nuevo = 0;
+  if (nuevo > base) nuevo = base;
+
+  p.stock = nuevo;
+  writeProductos(productos);
+}
+
 // Agrega stockBase si falta (lo hace una sola vez)
 function ensureStockBase(){
   const prods = readProductos();
@@ -81,7 +128,6 @@ function restoreStocksToBase(){
 // === API pública ===
 function agregarAlCarrito(prod){
   // prod: { id, nombre, precio (number), img }
-  // Evitar agregar más de lo disponible
   const prods = readProductos();
   const p = prods.find(x => String(x.id) === String(prod.id));
   const base = Number(p?.stockBase ?? p?.stock ?? Infinity);
@@ -96,7 +142,10 @@ function agregarAlCarrito(prod){
   const productos = readProductos();
   const pIdx = productos.findIndex(p => String(p.id) === String(prod.id));
   const stock = pIdx >= 0 ? Number(productos[pIdx].stock || 0) : 0;
-  if (pIdx >= 0 && stock <= 0) { updateBadges(cart); return; }
+  if (pIdx >= 0 && stock <= 0) { 
+    updateBadges(cart); 
+    return; 
+  }
   if (pIdx >= 0) ajustarStockProducto(prod.id, -1);
 
   const idx = cart.findIndex(i => String(i.id) === String(prod.id));
@@ -210,7 +259,8 @@ function renderCart(){
     const precio = Number(p.precio)||0;
     const qty = Math.max(1, Number(p.cantidad||1));
     const subtotal = precio * qty;
-    const img = p.img || "../assets/img/placeholder.png";
+    const img = sanImg(p.img || "");
+
     return `
       <tr data-id="${String(p.id)}">
         <td>
