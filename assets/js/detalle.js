@@ -13,9 +13,12 @@ function resolveImg(src = "") {
     return "../" + src.replace(/^\.?\//, "");
   }
   // Si viene solo "aros.jpeg" o similar
-  return "../assets/img/" + src
-    .replace(/^\/+/, "")
-    .replace(/^(\.\.\/)+/, "");
+  return (
+    "../assets/img/" +
+    src
+      .replace(/^\/+/, "")
+      .replace(/^(\.\.\/)+/, "")
+  );
 }
 
 function getIdFromURL() {
@@ -164,9 +167,22 @@ function renderDetalle() {
    ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // NAV: hamburguesa + toggle de menú (mismo patrón que index y catálogo)
+  const hamburger = document.querySelector(".hamburger");
+  const navLinks = document.querySelector(".nav-links");
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", () => {
+      const abierto = navLinks.classList.toggle("nav-open");
+      navLinks.classList.toggle("active", abierto);
+      hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
+    });
+  }
+
   // Actualiza badge del nav y sincroniza stock según carrito actual
   if (typeof initCarrito === "function") {
     initCarrito();
   }
+
   renderDetalle();
 });
