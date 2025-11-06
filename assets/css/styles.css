@@ -765,3 +765,11 @@ footer{
   margin-top: clamp(24px, 4vw, 40px);
 }
 
+.nav-links {
+  display: none;
+  flex-direction: column;
+}
+
+.nav-links.nav-open {
+  display: flex;
+}

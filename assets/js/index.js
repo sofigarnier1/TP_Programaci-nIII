@@ -107,6 +107,16 @@ function initIndex() {
     }
   });
 
+    const hamburger = document.querySelector(".hamburger");
+  const navLinks = document.querySelector(".nav-links");
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", () => {
+      const abierto = navLinks.classList.toggle("nav-open");
+      hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
+    });
+  }
+  
   initCarrito();
 }
 
