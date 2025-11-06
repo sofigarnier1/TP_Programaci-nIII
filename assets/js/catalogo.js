@@ -24,16 +24,45 @@ let productos = (JSON.parse(localStorage.getItem("productos")) || datosProductos
   ...p,
   precio: Number(p.precio) || 0,
   categoria: (p.categoria || "").toString(),
-  material: p.material ?? p.descripcion ?? "—"   // 👈 clave
+  material: p.material ?? p.descripcion ?? "—"
 }));
 localStorage.setItem("productos", JSON.stringify(productos));
-
-
-
 
 // Helpers
 const norm = (s = "") => s.toString().toLowerCase().trim();
 const splitCats = (s = "") => norm(s).split(",").map(x => x.trim()).filter(Boolean);
+
+// === Popup estilo Sabina (SweetAlert2 con fallback a toast) ===
+function avisarAgregado(nombre) {
+  if (typeof Swal !== "undefined") {
+    Swal.fire({
+      title: "¡Producto agregado!",
+      text: `"${nombre}" se agregó al carrito 💚`,
+      icon: "success",
+      timer: 1800,
+      showConfirmButton: false,
+      confirmButtonColor: "#70e686",
+      background: "#fff",
+      color: "#000",
+      customClass: { popup: "sabina-success" }
+    });
+  } else {
+    mostrarMensaje(`"${nombre}" agregado con éxito 💚`);
+  }
+}
+
+// === Cartel de confirmación (fallback toast) ===
+function mostrarMensaje(texto = "Agregado con éxito 💚") {
+  let aviso = document.getElementById("mensaje-exito");
+  if (!aviso) {
+    aviso = document.createElement("div");
+    aviso.id = "mensaje-exito";
+    document.body.appendChild(aviso);
+  }
+  aviso.textContent = texto;
+  aviso.classList.add("visible");
+  setTimeout(() => aviso.classList.remove("visible"), 2500);
+}
 
 // 2) Crear tarjeta
 function crearTarjeta(p) {
@@ -98,7 +127,7 @@ function initCatalogo() {
   // Filtro automático al cambiar
   if (sel) sel.addEventListener("change", aplicarFiltro);
 
-  // (Opcional) Soporta botón "Aplicar" si lo dejás en el HTML
+  // (Opcional) Botón "Aplicar"
   const btn = document.getElementById("aplicar");
   if (btn) btn.addEventListener("click", aplicarFiltro);
 
@@ -113,13 +142,16 @@ function initCatalogo() {
         const id = card?.dataset.id;
         const prod = productos.find(x => String(x.id) === String(id));
         if (!prod) return;
+
         agregarAlCarrito({
           id: prod.id,
           nombre: prod.nombre,
           precio: prod.precio,
           img: prod.img
         });
-        mostrarMensaje("Producto agregado con éxito 💚");
+
+        // ✅ Popup estilo Sabina
+        avisarAgregado(prod.nombre);
         return;
       }
 
@@ -142,21 +174,4 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCatalogo);
 } else {
   initCatalogo();
-}
-
-// === Cartel de confirmación ===
-function mostrarMensaje(texto = "Agregado con éxito 💚") {
-  // Crear el contenedor si no existe
-  let aviso = document.getElementById("mensaje-exito");
-  if (!aviso) {
-    aviso = document.createElement("div");
-    aviso.id = "mensaje-exito";
-    document.body.appendChild(aviso);
-  }
-
-  aviso.textContent = texto;
-  aviso.classList.add("visible");
-
-  // Se oculta automáticamente después de 2,5s
-  setTimeout(() => aviso.classList.remove("visible"), 2500);
 }

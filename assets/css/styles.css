@@ -320,15 +320,26 @@ main { margin-top: 10px; }
   max-width: max-content;
 }
 
-/* =========================
-   GRID de productos (responsive)
-   ========================= */
+/* === GRID de productos con aire lateral y centrado === */
 #productos {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: clamp(16px, 4vw, 36px);
-  justify-content:center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(24px, 3vw, 40px);
+  justify-content: center;
+  max-width: 950px;        /* 💡 limita el ancho total */
+  margin: 0 auto;          /* centra el bloque */
+  padding: 0 20px;         /* aire lateral */
 }
+
+/* En celulares: una sola columna */
+@media (max-width: 700px) {
+  #productos {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+}
+
+
 
 /* Etiquetas/filtros */
 #productos label {
@@ -395,14 +406,12 @@ main { margin-top: 10px; }
   flex-wrap:wrap; margin:0;
 }
 
-/* =========================
-   FOOTER
-   ========================= */
 footer {
-  background: var(--accent);
-  color:#000; text-align:center;
-  padding:12px; margin-top:40px;
-  border-top:1px solid #ddd;
+  text-align: center;
+  font-weight: 600;
+  padding: 12px 0;
+  background: var(--accent, #7cee8bc9);
+  color: #000;
 }
 
 /* =========================
@@ -466,32 +475,29 @@ footer {
   transform: translateX(-50%) translateY(0);
 }
 
-/* ===== Detalle de producto (card más chica) ===== */
-.detalle-wrapper{
-  display: flex;
-  justify-content: center;
-  padding: 24px;
-}
-
-.detalle-card{
+/* ===== Detalle de producto ===== */
+/* === Tarjeta de detalle de producto más compacta === */
+.detalle-card {
   width: 100%;
-  max-width: 720px;             /* << achica el ancho total */
-  margin: 0 auto;
+  max-width: 520px;              /* antes era 720px → ahora más chica */
+  margin: 40px auto 60px;        /* centrado y aire arriba/abajo */
   background: var(--cream, #f8f3eb);
   border: 1px solid rgba(0,0,0,.08);
   border-radius: 18px;
   box-shadow: 0 8px 22px rgba(0,0,0,.08);
-  padding: clamp(16px, 3vw, 28px);
+  padding: clamp(16px, 3vw, 24px);
+  text-align: center;            /* centra título e imagen */
 }
 
-.detalle-card h1{
-  text-align: center;
-  margin: 0 0 14px;
+.detalle-card h1 {
+  margin: 0 0 12px;
+  font-size: clamp(22px, 2vw, 28px);
 }
 
-.detalle-img{
+/* Imagen más pequeña y centrada */
+.detalle-img {
   width: 100%;
-  max-width: 520px;              /* << controla el ancho de la imagen */
+  max-width: 380px;              /* antes era 520px */
   height: auto;
   display: block;
   margin: 0 auto 14px;
@@ -499,52 +505,78 @@ footer {
   box-shadow: 0 4px 14px rgba(0,0,0,.08);
 }
 
-/* Bloques de info */
-.detalle-info{
+/* Bloques de info más compactos */
+.detalle-info {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+/* Botones */
+.detalle-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+
+/* Info del producto */
+.detalle-info {
   max-width: 520px;
   margin: 0 auto;
   text-align: left;
 }
-.detalle-info p{ margin: 14px 0; }
-.detalle-info strong{ font-weight: 700; }
+.detalle-info p { margin: 14px 0; }
+.detalle-info strong { font-weight: 700; }
 
-/* Botones del detalle */
-.detalle-actions{
+/* ===== Botones del detalle ===== */
+.detalle-actions {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   margin-top: 18px;
 }
 
-/* Botón sólido (Agregar al carrito) */
-.btn-solid{
+/* === ESTILO UNIFICADO PARA BOTONES === */
+.detalle-actions .btn {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color .2s ease, border-color .2s ease, transform .1s ease;
+}
+
+/* Agregar al carrito (sólido) */
+.detalle-actions .btn-primary {
   background: var(--accent, #7cee8bc9);
   border: 2px solid var(--accent, #7cee8bc9);
   color: #000;
-  font-weight: 700;
-  padding: 10px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color .2s ease, transform .1s ease;
 }
-.btn-solid:hover{
+.detalle-actions .btn-primary:hover {
   background: var(--accent-strong, #70e686);
+  border-color: var(--accent-strong, #70e686);
 }
-.btn-solid:active{ transform: translateY(1px); }
+.detalle-actions .btn-primary:active { transform: translateY(1px); }
 
-/* Botón contorno (Volver) */
-.btn-ghost{
+/* Volver al catálogo (contorno) */
+.detalle-actions .btn-sec {
   background: #fff;
   border: 2px solid var(--accent, #7cee8bc9);
   color: #000;
-  font-weight: 700;
-  padding: 10px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color .2s ease, transform .1s ease;
 }
-.btn-ghost:hover{ background: var(--cream-2, #fbf7f2); }
-.btn-ghost:active{ transform: translateY(1px); }
+.detalle-actions .btn-sec:hover {
+  background: var(--cream-2, #fbf7f2);
+}
+.detalle-actions .btn-sec:active { transform: translateY(1px); }
 
 /* Toast de éxito (si no lo tenés aún en este CSS) */
 #mensaje-exito {
@@ -567,3 +599,169 @@ footer {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+.prod-cell { display:flex; align-items:center; gap:12px; }
+.prod-cell .thumb { width:48px; height:48px; object-fit:cover; border-radius:8px; }
+
+.tabla .center { text-align:center; }
+.tabla .num { text-align:right; }
+
+input.qty {
+  width: 72px;
+  text-align: center;
+  padding: 6px 8px;
+  border: 1px solid var(--border, #e6e6e6);
+  border-radius: 10px;
+}
+
+
+.btn-primary,
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border, #e6e6e6);
+  background: #fff;
+  color: #000;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-danger:hover {
+  background: var(--accent, #7cee8bc9);
+}
+
+.btn { display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:12px; border:1px solid transparent; cursor:pointer; }
+.btn-mini { padding:6px 10px; border-radius:10px; font-size:.9rem; }
+
+.btn-sec { background:#fff; border-color:var(--border,#e6e6e6); }
+.btn-danger { background:#ffe9e9; border-color:#f3b8b8; }
+.btn-primary { background:var(--accent,#7cee8b); border-color:var(--accent-strong,#70e686); }
+.btn[disabled] { opacity:.6; cursor:not-allowed; }
+.resumen-actions { display:flex; flex-direction:column; gap:10px; }
+@media(min-width: 768px){ .resumen-actions{ flex-direction:column; } }
+
+.resumen-actions .btn {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+footer {
+  background: var(--accent, #7cee8bc9);
+  color: #000;
+  padding: 14px 0;
+  text-align: center;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+}
+
+footer .bar-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+footer .bar-inner p {
+  margin: 0;
+  text-align: center;
+}
+
+/* SweetAlert2 – estilo Sabina */
+.swal2-popup.sabina-success{
+  border-radius:16px;
+  font-family:'Montserrat', sans-serif;
+}
+.swal2-popup.sabina-success .swal2-title{
+  margin:0 0 8px !important;
+  padding:12px 16px;
+  width:100%;
+  background:#e6f7e9; /* verde clarito */
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+  font-weight:700;
+}
+
+/* ===== Filtro de categoría (look Sabina) ===== */
+#filtro {
+  gap: 12px;
+  margin-top: 8px;
+}
+
+#filtro label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  opacity: .9;
+}
+
+/* Select con borde redondeado, sombra suave y flecha custom */
+#filtro select {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: #000;
+  background: #fff;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 10px 40px 10px 12px;          /* espacio para la flecha */
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+  appearance: none;                      /* oculta flecha nativa */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Flecha SVG inline (negra con leve opacidad) */
+  background-image: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.7'>\
+  <polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+
+#filtro select:hover {
+  background-color: var(--cream-2);
+  border-color: var(--accent-strong);
+}
+
+#filtro select:focus {
+  outline: none;
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px rgba(124, 238, 139, 0.25);
+}
+
+/* Opciones internas un toque más grandes */
+#filtro select option {
+  font-weight: 600;
+  padding: 6px;
+}
+
+/* Responsive: que no quede apretado en mobile */
+@media (max-width: 520px) {
+  #filtro {
+    gap: 8px;
+  }
+  #filtro select {
+    width: 100%;
+  }
+}
+
+
+/* Separar las tarjetas del footer */
+#productos{
+  margin-bottom: clamp(48px, 8vh, 96px);  /* espacio debajo del grid */
+}
+
+/* Un colchoncito general por si alguna página es corta */
+main{
+  padding-bottom: 40px;
+}
+
+/* Y un pequeño margen superior del footer */
+footer{
+  margin-top: clamp(24px, 4vw, 40px);
+}
+

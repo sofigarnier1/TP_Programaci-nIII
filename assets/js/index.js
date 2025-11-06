@@ -19,7 +19,7 @@ function tomarAleatorios(arr, n = 2) {
 function tarjetaDestacada(p) {
   const art = document.createElement("div");
   art.className = "producto";
-  art.dataset.id = p.id; // <-- para usar en el click
+  art.dataset.id = p.id;
   art.innerHTML = `
     <h3>${p.nombre}</h3>
     <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
@@ -48,12 +48,29 @@ function initIndex() {
       const id = card?.dataset.id;
       const prod = productos.find(x => String(x.id) === String(id));
       if (!prod) return;
+
       agregarAlCarrito({
         id: prod.id,
         nombre: prod.nombre,
         precio: Number(prod.precio) || 0,
         img: prod.img
       });
+
+      // ✅ SweetAlert estilo Sabina
+      Swal.fire({
+        title: "¡Producto agregado!",
+        text: `"${prod.nombre}" se agregó al carrito 💚`,
+        icon: "success",
+        confirmButtonColor: "#70e686",
+        background: "#fff",
+        color: "#000",
+        timer: 1800,
+        showConfirmButton: false,
+        customClass: {
+          popup: "sabina-success"
+        }
+      });
+
       return;
     }
 
@@ -74,4 +91,5 @@ if (document.readyState === "loading") {
 } else {
   initIndex();
 }
+
 
