@@ -559,9 +559,9 @@ nav {
   justify-content: space-between;
 }
 
-/* botón hamburguesa (oculto en desktop) */
+/* botón hamburguesa (SIEMPRE visible) */
 .hamburger {
-  display: none;              /* se muestra sólo en mobile */
+  display: flex;
   flex-direction: column;
   gap: 5px;
   background: none;
@@ -576,7 +576,7 @@ nav {
   background: #000;
 }
 
-/* links en desktop (siempre visibles en fila) */
+/* links en desktop (fila) */
 .nav-links {
   display: flex;
   align-items: center;
@@ -600,9 +600,6 @@ nav {
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
-  .hamburger {
-    display: flex;    /* ahora sí se ve en mobile */
-  }
 
   .nav-links {
     position: absolute;
@@ -615,11 +612,11 @@ nav {
     align-items: flex-start;
     gap: 10px;
 
-    display: none;    /* oculto por defecto */
+    display: none;         /* oculto por defecto */
   }
 
   .nav-links.nav-open {
-    display: flex;
+    display: flex;         /* se muestra cuando JS agrega .nav-open */
   }
 
   .nav-links a {
