@@ -559,7 +559,7 @@ nav {
   justify-content: space-between;
 }
 
-/* botón hamburguesa (SIEMPRE visible) */
+/* botón hamburguesa → SIEMPRE visible */
 .hamburger {
   display: flex;
   flex-direction: column;
@@ -576,14 +576,15 @@ nav {
   background: #000;
 }
 
-/* links en desktop (fila) */
+/* contenedor de links */
 .nav-links {
   display: flex;
-  align-items: center;
   gap: 20px;
 }
 
+/* por defecto SOLO se ve el carrito */
 .nav-links a {
+  display: none;
   color: #000;
   font-weight: bold;
   text-decoration: none;
@@ -593,10 +594,32 @@ nav {
   text-decoration: underline;
 }
 
-/* carrito pegado a la derecha en desktop */
 .nav-links a#nav-cart {
+  display: block;
   margin-left: auto;
 }
+
+/* cuando se abre el menú */
+.nav-links.active {
+  display: block;
+  position: absolute;
+  top: 41px;
+  left: 0;
+  right: 0;
+  background: var(--accent, #7cee8bc9);
+  padding: 15px;
+}
+
+.nav-links.active a {
+  display: block;
+  padding: 10px 0;
+}
+
+/* el carrito también baja al menú cuando está abierto */
+.nav-links.active a#nav-cart {
+  margin-left: 0;
+}
+
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {

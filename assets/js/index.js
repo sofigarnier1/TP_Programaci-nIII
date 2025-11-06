@@ -1,7 +1,11 @@
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+// =========================
+// Normalizar productos
+// =========================
+let productos =
+  JSON.parse(localStorage.getItem("productos") || "null") || datosProductos;
 
 productos = productos.map((p) => ({
   ...p,
@@ -29,9 +33,12 @@ function tarjetaDestacada(p) {
   const art = document.createElement("div");
   art.className = "producto";
   art.dataset.id = p.id;
+
+  const img = p.img || "assets/img/placeholder.png";
+
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
+    <img src="${img}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -41,26 +48,30 @@ function tarjetaDestacada(p) {
   return art;
 }
 
+// =========================
+// Inicialización
+// =========================
+
 function initIndex() {
-  /* 1) NAV + HAMBURGUESA */
+  // 1) NAV: hamburguesa + toggle de menú
   const hamburger = document.querySelector(".hamburger");
-  const navLinks  = document.querySelector(".nav-links");
+  const navLinks = document.querySelector(".nav-links");
 
   if (hamburger && navLinks) {
     hamburger.addEventListener("click", () => {
-      const abierto = navLinks.classList.toggle("nav-open");
-      hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
+      const isOpen = navLinks.classList.toggle("active");
+      hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
   }
 
-  /* 2) CARRO EN NAV */
+  // 2) Carrito (badge en el nav)
   try {
     initCarrito();
   } catch (e) {
     console.error("Error al inicializar carrito:", e);
   }
 
-  /* 3) DESTACADOS (solo en el inicio) */
+  // 3) DESTACADOS solo si existe #destacados (inicio)
   const cont = document.getElementById("destacados");
   if (!cont) return;
 
@@ -68,11 +79,12 @@ function initIndex() {
   cont.innerHTML = "";
   destacados.forEach((p) => cont.appendChild(tarjetaDestacada(p)));
 
+  // Eventos de botones de las tarjetas
   cont.addEventListener("click", (e) => {
     const btnAdd = e.target.closest(".btnCarrito");
     if (btnAdd) {
       const card = btnAdd.closest(".producto");
-      const id   = card?.dataset.id;
+      const id = card?.dataset.id;
       const prod = productos.find((x) => String(x.id) === String(id));
       if (!prod) return;
 
@@ -93,16 +105,19 @@ function initIndex() {
           color: "#000",
           timer: 1800,
           showConfirmButton: false,
-          customClass: { popup: "sabina-success" },
+          customClass: {
+            popup: "sabina-success",
+          },
         });
       }
+
       return;
     }
 
     const btnDet = e.target.closest(".btnDetalle");
     if (btnDet) {
       const card = btnDet.closest(".producto");
-      const id   = card?.dataset.id;
+      const id = card?.dataset.id;
       if (id) {
         const detalleBase = location.pathname.includes("/pages/")
           ? "producto.html"
