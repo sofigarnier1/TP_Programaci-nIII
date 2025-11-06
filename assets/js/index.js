@@ -125,7 +125,10 @@ function initIndex() {
 
   if (hamburger && navLinks) {
     hamburger.addEventListener("click", () => {
-      const isOpen = navLinks.classList.toggle("active");
+      // Clase principal que suele usar el CSS
+      const isOpen = navLinks.classList.toggle("nav-open");
+      // De paso mantenemos 'active' en sync por compatibilidad
+      navLinks.classList.toggle("active", isOpen);
       hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
   }
