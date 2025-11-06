@@ -2,58 +2,73 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../assets/img/sbicon.ico">
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <title>Sabina Accesorios</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../assets/img/sbicon.ico">
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <title>Detalle de producto | Sabina Accesorios</title>
 </head>
 
 <body>
-    <!-- header común -->
-    <header>
-        <nav>
-            <div class="bar-inner">
-          <!-- botón hamburguesa -->
-          <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
-            <span></span><span></span><span></span>
-          </button>
 
-          <div class="nav-links">
-            <a href="../index.html">Inicio</a>
-            <a href="productos.html">Productos</a>
-            <a href="contacto.html">Contactos</a>
-            <a href="carrito.html" id="nav-cart">🛒 (0)</a>
-          </div>
+  <!-- HEADER -->
+  <header>
+    <nav>
+      <div class="bar-inner">
+        <!-- botón hamburguesa -->
+        <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links">
+          <!-- Desde /pages/ usamos rutas relativas -->
+          <a href="../index.html">Inicio</a>
+          <a href="productos.html">Productos</a>
+          <a href="contacto.html">Contactos</a>
+          <a href="carrito.html" id="nav-cart">🛒 (0)</a>
         </div>
-        </nav>
-    </header>
+      </div>
+    </nav>
+  </header>
 
-    <main>
-        <section id="hero">
-            <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
-        </section>
-        
-        <!-- Producto -->
-        <section id="detalleProducto">
-        
-        </section>
+  <!-- CONTENIDO -->
+  <main>
+    <section id="hero" class="container">
+      <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
+    </section>
 
-    </main>
+    <!-- Acá detalle.js va a inyectar el contenido -->
+    <section id="detalleProducto" class="container">
+      <!-- contenido dinámico del producto -->
+    </section>
+  </main>
 
+  <!-- FOOTER -->
+  <footer>
+    <div class="bar-inner">
+      <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
+    </div>
+  </footer>
 
+  <!-- Script de detalle (módulo) -->
+  <script type="module" src="../assets/js/detalle.js"></script>
+  <!-- SweetAlert para mensajes (ej. agregado al carrito) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script type="module" src="../assets/js/detalle.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-    <footer>
-  <div class="bar-inner">
-    <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
-  </div>
-</footer>
+  <!-- Hamburguesa: mismo comportamiento que en las otras páginas -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const hamburger = document.querySelector(".hamburger");
+      const navLinks = document.querySelector(".nav-links");
+      if (hamburger && navLinks) {
+        hamburger.addEventListener("click", () => {
+          const abierto = navLinks.classList.toggle("active");
+          hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
+        });
+      }
+    });
+  </script>
 
 </body>
-
 </html>

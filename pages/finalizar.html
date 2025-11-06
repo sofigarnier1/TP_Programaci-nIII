@@ -7,21 +7,27 @@
   <title>Finalizar compra | Sabina Accesorios</title>
 
   <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  >
 
   <!-- Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
 
-  <!-- Tus estilos globales (opcional) -->
+  <!-- Estilos globales -->
   <link rel="stylesheet" href="../assets/css/styles.css" />
 
   <!-- Estilos específicos de Finalizar compra -->
   <style>
-    /* ====== Paleta base (verde Sabina) ====== */
     :root{
-      --accent: #7cee8bc9;      /* Verde Sabina */
-      --accent-strong: #70e686; /* Hover más oscuro */
+      --accent: #7cee8bc9;
+      --accent-strong: #70e686;
       --text: #000;
       --bg: #fff;
       --muted: #f6fff8;
@@ -30,40 +36,72 @@
       --cream-2: #fbf7f2;
       --shadow: 0 4px 16px rgba(0,0,0,.06);
     }
-    body{ font-family:'Montserrat',sans-serif; color:var(--text); background:var(--bg); }
+    body{
+      font-family:'Montserrat',sans-serif;
+      color:var(--text);
+      background:var(--bg);
+    }
 
-    /* ====== Header simple con logo ====== */
-    .header-logo { background:#fff; text-align:center; padding: 18px 0 0; }
-    .logo-sb { width: 100px; height:auto; border-radius:50%; object-fit:cover; }
+    /* Header simple con logo */
+    .header-logo{
+      background:#fff;
+      text-align:center;
+      padding: 18px 0 0;
+    }
+    .logo-sb{
+      width: 100px;
+      height:auto;
+      border-radius:50%;
+      object-fit:cover;
+    }
 
-    /* ====== Checkout centrado ====== */
-    #checkout {
-      display:flex; flex-direction:column; align-items:center;
+    /* Checkout */
+    #checkout{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
       padding: clamp(16px, 4vw, 40px) 16px;
       background: var(--bg);
     }
-    #checkout .checkout-title {
-      text-align:center; font-family:'Playfair Display',serif;
-      font-size: clamp(24px, 3vw, 32px); margin: 8px 0 20px;
+    #checkout .checkout-title{
+      text-align:center;
+      font-family:'Playfair Display',serif;
+      font-size: clamp(24px, 3vw, 32px);
+      margin: 8px 0 20px;
     }
-    #checkout .checkout-card {
-      width:100%; max-width:720px; margin:0 auto;
-      background:#fff; border:1px solid var(--border);
-      border-radius:16px; box-shadow: var(--shadow); overflow:hidden;
+    #checkout .checkout-card{
+      width:100%;
+      max-width:720px;
+      margin:0 auto;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
-    #checkout .sabina-header {
-      background: var(--accent); color:#000; font-weight:700;
-      padding: 14px 18px; border-bottom:1px solid rgba(0,0,0,.06);
+    #checkout .sabina-header{
+      background: var(--accent);
+      color:#000;
+      font-weight:700;
+      padding: 14px 18px;
+      border-bottom:1px solid rgba(0,0,0,.06);
     }
-    #checkout .card-body { padding: clamp(16px, 3vw, 28px); }
+    #checkout .card-body{
+      padding: clamp(16px, 3vw, 28px);
+    }
 
     /* Inputs y selects */
-    #checkout .form-label { font-weight:600; }
-    #checkout .form-control, #checkout .form-select, #checkout textarea{
-      border-radius:10px; border:1px solid var(--border);
+    #checkout .form-label{ font-weight:600; }
+    #checkout .form-control,
+    #checkout .form-select,
+    #checkout textarea{
+      border-radius:10px;
+      border:1px solid var(--border);
       transition: border-color .15s ease, box-shadow .15s ease;
     }
-    #checkout .form-control:focus, #checkout .form-select:focus, #checkout textarea:focus{
+    #checkout .form-control:focus,
+    #checkout .form-select:focus,
+    #checkout textarea:focus{
       border-color: var(--accent);
       box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--accent) 30%, transparent);
       outline: none;
@@ -74,27 +112,50 @@
 
     /* Botones */
     #checkout .btn-finalizar{
-      background:var(--accent); border:2px solid var(--accent); color:#000;
-      font-weight:700; padding:12px 16px; border-radius:12px; cursor:pointer;
+      background:var(--accent);
+      border:2px solid var(--accent);
+      color:#000;
+      font-weight:700;
+      padding:12px 16px;
+      border-radius:12px;
+      cursor:pointer;
       transition: background-color .2s ease, border-color .2s ease, transform .1s ease;
     }
-    #checkout .btn-finalizar:hover{ background:var(--accent-strong); border-color:var(--accent-strong); }
+    #checkout .btn-finalizar:hover{
+      background:var(--accent-strong);
+      border-color:var(--accent-strong);
+    }
     #checkout .btn-finalizar:active{ transform: translateY(1px); }
 
     #checkout .btn-ghost{
-      background:#fff; border:2px solid var(--accent); color:#000;
-      font-weight:700; padding:12px 16px; border-radius:12px; cursor:pointer;
+      background:#fff;
+      border:2px solid var(--accent);
+      color:#000;
+      font-weight:700;
+      padding:12px 16px;
+      border-radius:12px;
+      cursor:pointer;
       transition: background-color .2s ease, border-color .2s ease, transform .1s ease;
     }
-    #checkout .btn-ghost:hover{ background:var(--cream-2); border-color:var(--accent-strong); }
+    #checkout .btn-ghost:hover{
+      background:var(--cream-2);
+      border-color:var(--accent-strong);
+    }
     #checkout .btn-ghost:active{ transform: translateY(1px); }
 
     /* Check TyC */
-    #checkout .form-check-input:checked{ background-color:var(--accent); border-color:var(--accent); }
+    #checkout .form-check-input:checked{
+      background-color:var(--accent);
+      border-color:var(--accent);
+    }
 
-    /* Modal estilo Sabina */
-    .modal-sabina .modal-header{ border:none; background: color-mix(in srgb, var(--accent) 25%, white); }
-    .modal-sabina .modal-title{ font-weight:700; }
+    /* Footer */
+    footer{
+      padding: 1.5rem 0;
+      text-align:center;
+      font-size:0.9rem;
+      color:#555;
+    }
   </style>
 </head>
 
@@ -216,105 +277,17 @@
   </main>
 
   <!-- FOOTER simple -->
-  <footer class="py-4 text-center">
-    <p class="mb-0">© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
+  <footer>
+    <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
   </footer>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-          crossorigin="anonymous"></script>
-
-
-  <!-- Lógica del formulario -->
-<script>
-(() => {
-  const form = document.getElementById('checkoutForm');
-  const entrega = document.getElementById('entrega');
-  const bloqueDireccion = document.getElementById('bloqueDireccion');
-
-  const direccion = document.getElementById('direccion');
-  const ciudad = document.getElementById('ciudad');
-  const provincia = document.getElementById('provincia');
-  const cp = document.getElementById('cp');
-
-  // Mostrar/ocultar dirección según entrega
-  const syncDireccion = () => {
-    const esEnvio = entrega.value === 'envio';
-    bloqueDireccion.hidden = !esEnvio;
-    [direccion, ciudad, provincia, cp].forEach(inp => inp.required = esEnvio);
-  };
-  entrega.addEventListener('change', syncDireccion);
-  syncDireccion();
-
-  // Genera un código de pedido: SB-XXXXXX
-  function genOrderCode(prefix = "SB-"){
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let out = "";
-    for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random()*chars.length)];
-    return prefix + out;
-  }
-
-  form.addEventListener('submit', (ev) => {
-    ev.preventDefault();
-
-    if (!form.checkValidity()) {
-      ev.stopPropagation();
-      form.classList.add('was-validated');
-      return;
-    }
-
-    const orderId = genOrderCode("SB-");
-
-    // Guardar datos mínimos por si querés página de "Gracias"
-    localStorage.setItem("ultimaOrdenSabina", JSON.stringify({
-      id: orderId,
-      fecha: new Date().toISOString(),
-      // si querés, podés guardar nombre/email, etc.
-    }));
-
-    // Mostrar SweetAlert con estilo Sabina
-    Swal.fire({
-      title: '¡Compra confirmada!',
-      html: `
-        <p>Gracias por tu compra. Registramos tus datos correctamente.</p>
-        <p><strong>N° de pedido:</strong> ${orderId}</p>
-      `,
-      icon: 'success',
-      showCloseButton: true,
-      confirmButtonText: 'Aceptar',
-      confirmButtonColor: '#70e686',
-      background: '#fff',
-      color: '#000',
-      customClass: { popup: 'sabina-success' },
-      allowOutsideClick: false,
-      allowEscapeKey: false
-    }).then(() => {
-      // limpiar formulario
-      form.reset();
-      form.classList.remove('was-validated');
-      syncDireccion();
-
-      // limpiar carrito/preview si corresponde
-      localStorage.setItem('carrito', '[]');
-      localStorage.removeItem('ordenPreview');
-
-      // redirigir (opcional)
-      window.location.href = '/pages/productos.html';
-    });
-  });
-})();
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" ...></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-  // tu lógica del formulario (ver punto 4)
-</script>
-
-
+  <!-- JS: Bootstrap + SweetAlert + lógica de finalizar -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../assets/js/finalizar.js"></script>
 </body>
 </html>
-
-
-

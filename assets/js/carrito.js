@@ -3,27 +3,36 @@ function readCart() {
   try { return JSON.parse(localStorage.getItem("carrito") || "[]"); }
   catch { return []; }
 }
+
 function writeCart(items) {
   localStorage.setItem("carrito", JSON.stringify(items));
   updateBadges(items);
   // mantener stock sincronizado cada vez que se escribe el carrito
   syncStocksWithCart();
 }
-function money(n){ try { return Number(n||0).toLocaleString("es-AR"); } catch { return n; } }
 
-function updateBadges(items){
-  const count = items.reduce((a, it) => a + Number(it.cantidad||1), 0);
+function money(n) {
+  try {
+    return Number(n || 0).toLocaleString("es-AR");
+  } catch {
+    return n;
+  }
+}
+
+function updateBadges(items) {
+  const count = items.reduce((a, it) => a + Number(it.cantidad || 1), 0);
   const nav = document.getElementById("nav-cart");
   if (nav) nav.textContent = `🛒 (${count})`;
   const badge = document.getElementById("badgeCarrito");
   if (badge) badge.textContent = count;
 }
 
-function readProductos(){
+function readProductos() {
   try { return JSON.parse(localStorage.getItem("productos") || "[]"); }
   catch { return []; }
 }
-function writeProductos(list){
+
+function writeProductos(list) {
   localStorage.setItem("productos", JSON.stringify(list));
 }
 
@@ -31,8 +40,8 @@ function writeProductos(list){
    Helpers de imágenes y stock
    ========================= */
 
-// Normaliza la ruta de imagen para que funcione desde /pages/carrito.html
-function sanImg(path){
+// Normaliza la ruta de imagen (pensado para mostrarse en /pages/carrito.html)
+function sanImg(path) {
   if (!path) return "../assets/img/placeholder.png";
 
   let clean = String(path).trim();
@@ -41,7 +50,8 @@ function sanImg(path){
 
   // si ya viene con "assets/..."
   if (clean.startsWith("assets/")) {
-    return "../" + clean; // desde /pages
+    // desde /pages/ necesitamos subir un nivel
+    return "../" + clean;
   }
 
   // si viene como "img/archivo.jpg"
@@ -54,7 +64,7 @@ function sanImg(path){
 }
 
 // Ajusta el stock de un producto en localStorage
-function ajustarStockProducto(prodId, delta){
+function ajustarStockProducto(prodId, delta) {
   const productos = readProductos();
   if (!Array.isArray(productos) || !productos.length) return;
 
@@ -75,10 +85,10 @@ function ajustarStockProducto(prodId, delta){
 }
 
 // Agrega stockBase si falta (lo hace una sola vez)
-function ensureStockBase(){
+function ensureStockBase() {
   const prods = readProductos();
   let touched = false;
-  for (const p of prods){
+  for (const p of prods) {
     if (typeof p.stockBase === "undefined") {
       p.stockBase = Number(p.stock ?? 0);
       if (typeof p.stock !== "undefined") p.stock = Number(p.stock);
@@ -89,21 +99,21 @@ function ensureStockBase(){
 }
 
 // Cantidad en carrito de un producto
-function qtyInCart(prodId){
+function qtyInCart(prodId) {
   const c = readCart();
   const item = c.find(x => String(x.id) === String(prodId));
   return Number(item?.cantidad || 0);
 }
 
 // Recalcula p.stock = p.stockBase - qtyEnCarrito
-function syncStocksWithCart(){
+function syncStocksWithCart() {
   const prods = readProductos();
   let touched = false;
-  for (const p of prods){
+  for (const p of prods) {
     const base = Number(p.stockBase ?? p.stock ?? 0);
     const enCarrito = qtyInCart(p.id);
     const nuevo = Math.max(0, base - enCarrito);
-    if (p.stock !== nuevo){
+    if (p.stock !== nuevo) {
       p.stock = nuevo;
       touched = true;
     }
@@ -112,12 +122,12 @@ function syncStocksWithCart(){
 }
 
 // Restaura el stock “visible” a su base (usado al vaciar carrito)
-function restoreStocksToBase(){
+function restoreStocksToBase() {
   const prods = readProductos();
   let touched = false;
-  for (const p of prods){
+  for (const p of prods) {
     const base = Number(p.stockBase ?? p.stock ?? 0);
-    if (p.stock !== base){
+    if (p.stock !== base) {
       p.stock = base;
       touched = true;
     }
@@ -126,7 +136,7 @@ function restoreStocksToBase(){
 }
 
 // === API pública ===
-function agregarAlCarrito(prod){
+function agregarAlCarrito(prod) {
   // prod: { id, nombre, precio (number), img }
   const prods = readProductos();
   const p = prods.find(x => String(x.id) === String(prod.id));
@@ -142,9 +152,9 @@ function agregarAlCarrito(prod){
   const productos = readProductos();
   const pIdx = productos.findIndex(p => String(p.id) === String(prod.id));
   const stock = pIdx >= 0 ? Number(productos[pIdx].stock || 0) : 0;
-  if (pIdx >= 0 && stock <= 0) { 
-    updateBadges(cart); 
-    return; 
+  if (pIdx >= 0 && stock <= 0) {
+    updateBadges(cart);
+    return;
   }
   if (pIdx >= 0) ajustarStockProducto(prod.id, -1);
 
@@ -204,7 +214,7 @@ function mostrarCarrito() {
     cont.appendChild(div);
   });
   const total = carrito.reduce(
-    (acc, item) => acc + Number(item.precio||0) * Number(item.cantidad||1),
+    (acc, item) => acc + Number(item.precio || 0) * Number(item.cantidad || 1),
     0
   );
   const pTotal = document.createElement("p");
@@ -212,9 +222,12 @@ function mostrarCarrito() {
   cont.appendChild(pTotal);
 }
 
-function vaciarCarrito(){
+function vaciarCarrito() {
   const cart = readCart();
-  if (!cart.length){ updateBadges([]); return; }
+  if (!cart.length) {
+    updateBadges([]);
+    return;
+  }
 
   // devuelve stock por cada ítem del carrito
   const devolver = cart.reduce((acc, it) => {
@@ -231,7 +244,7 @@ function vaciarCarrito(){
   updateBadges([]);
 }
 
-function renderCart(){
+function renderCart() {
   const tbody = document.getElementById("cart-body");
   const vacio = document.getElementById("cart-empty");
   const itemsEl = document.getElementById("resumen-items");
@@ -245,7 +258,7 @@ function renderCart(){
   const cart = readCart();
   updateBadges(cart);
 
-  if (!cart.length){
+  if (!cart.length) {
     tbody.innerHTML = "";
     vacio.hidden = false;
     itemsEl.textContent = "0";
@@ -256,8 +269,8 @@ function renderCart(){
   vacio.hidden = true;
 
   tbody.innerHTML = cart.map((p) => {
-    const precio = Number(p.precio)||0;
-    const qty = Math.max(1, Number(p.cantidad||1));
+    const precio = Number(p.precio) || 0;
+    const qty = Math.max(1, Number(p.cantidad || 1));
     const subtotal = precio * qty;
     const img = sanImg(p.img || "");
 
@@ -345,11 +358,11 @@ function renderCart(){
       if (!c.length) return;
 
       const total = c.reduce(
-        (a, it) => a + (Number(it.precio)||0) * (Number(it.cantidad)||1),
+        (a, it) => a + (Number(it.precio) || 0) * (Number(it.cantidad) || 1),
         0
       );
       const items = c.reduce(
-        (a, it) => a + Number(it.cantidad||1),
+        (a, it) => a + Number(it.cantidad || 1),
         0
       );
 
@@ -361,12 +374,13 @@ function renderCart(){
         cart: c
       }));
 
-      window.location.href = "/pages/finalizar.html";
+      // desde /pages/carrito.html → ruta relativa correcta
+      window.location.href = "finalizar.html";
     });
     btnFinalizar._bound = true;
   }
 
-  function onQtyChange(e){
+  function onQtyChange(e) {
     const input = e.target.closest(".qty");
     if (!input) return;
 
@@ -383,7 +397,7 @@ function renderCart(){
     const base = Number(p?.stockBase ?? p?.stock ?? Infinity);
     const enCarritoOtros = c
       .filter(x => String(x.id) === String(id))
-      .reduce((a, x) => a + Number(x.cantidad||0), 0) - Number(c[idx].cantidad||0);
+      .reduce((a, x) => a + Number(x.cantidad || 0), 0) - Number(c[idx].cantidad || 0);
     const maxPosible = Math.max(1, base - enCarritoOtros);
 
     c[idx].cantidad = Math.min(nuevaCant, maxPosible);
@@ -391,7 +405,7 @@ function renderCart(){
 
     writeCart(c);
 
-    const precio = Number(c[idx].precio)||0;
+    const precio = Number(c[idx].precio) || 0;
     const subCell = tr.querySelector(".subtotal");
     if (subCell) {
       subCell.innerHTML = `<strong>$ ${money(precio * c[idx].cantidad)}</strong>`;
@@ -400,7 +414,7 @@ function renderCart(){
     refreshTotals();
   }
 
-  function onRemoveClick(e){
+  function onRemoveClick(e) {
     const btn = e.target.closest(".btn-remove");
     if (!btn) return;
 
@@ -445,11 +459,11 @@ function renderCart(){
     });
   }
 
-  function refreshTotals(){
+  function refreshTotals() {
     const c = readCart();
-    const itemsCount = c.reduce((acc, it) => acc + Number(it.cantidad||1), 0);
+    const itemsCount = c.reduce((acc, it) => acc + Number(it.cantidad || 1), 0);
     const total = c.reduce(
-      (acc, it) => acc + (Number(it.precio)||0) * Number(it.cantidad||1),
+      (acc, it) => acc + (Number(it.precio) || 0) * Number(it.cantidad || 1),
       0
     );
     itemsEl.textContent = String(itemsCount);
@@ -468,8 +482,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const nav = document.querySelector(".nav-links");
   if (hamburger && nav) {
     hamburger.addEventListener("click", () => {
-      // usamos la MISMA clase que en el CSS: nav-open
-      const abierto = nav.classList.toggle("nav-open");
+      // igual que en index/productos: usamos 'active'
+      const abierto = nav.classList.toggle("active");
       hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
     });
   }

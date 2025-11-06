@@ -64,7 +64,7 @@ function cargarProductos() {
   // Guardo de nuevo en localStorage ya corregidos
   localStorage.setItem("productos", JSON.stringify(normalizados));
 
-  // Debug: imprimo rutas en consola
+  // Debug: imprimo rutas en consola (podés borrar esto cuando ya confíes)
   if (normalizados.length) {
     console.log("Productos cargados en index:", normalizados);
     normalizados.forEach((p) => {
@@ -200,4 +200,3 @@ if (document.readyState === "loading") {
 } else {
   initIndex();
 }
-

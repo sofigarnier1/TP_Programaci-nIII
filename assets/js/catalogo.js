@@ -1,34 +1,29 @@
+// =============================
+// Catálogo de productos Sabina
+// =============================
 
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-const getMaterial = (p = {}) => {
-  const cand = [
-    p.material, p.Material, p.materiales, p.Materiales, p.mat,
-    p.especificaciones?.material, p.detalle?.material, p.info?.material
-  ];
-  const val = cand.find(v => v !== undefined && v !== null && String(v).trim() !== "");
-  return val ? String(val).trim() : "";
-};
-
-const stored = JSON.parse(localStorage.getItem("productos")) || [];
-const needsRefresh = stored.length === 0 || stored.some(p => getMaterial(p) === "");
-
-let productos = (needsRefresh ? datosProductos : stored).map(p => ({
+// --- Normalización y carga inicial ---
+let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+productos = productos.map((p) => ({
   ...p,
   precio: Number(p.precio) || 0,
   categoria: (p.categoria || "").toString(),
-  material: p.material ?? p.descripcion ?? "—"
-  material: p.material ?? p.descripcion ?? "—"
 }));
 
 localStorage.setItem("productos", JSON.stringify(productos));
 
-// Helpers
+// --- Helpers ---
 const norm = (s = "") => s.toString().toLowerCase().trim();
-const splitCats = (s = "") => norm(s).split(",").map(x => x.trim()).filter(Boolean);
+const splitCats = (s = "") =>
+  norm(s)
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
 
-// === Popup estilo Sabina (SweetAlert2 con fallback a toast) ===
+// --- Avisos visuales ---
 function avisarAgregado(nombre) {
   if (typeof Swal !== "undefined") {
     Swal.fire({
@@ -40,14 +35,13 @@ function avisarAgregado(nombre) {
       confirmButtonColor: "#70e686",
       background: "#fff",
       color: "#000",
-      customClass: { popup: "sabina-success" }
+      customClass: { popup: "sabina-success" },
     });
   } else {
     mostrarMensaje(`"${nombre}" agregado con éxito 💚`);
   }
 }
 
-// === Cartel de confirmación (fallback toast) ===
 function mostrarMensaje(texto = "Agregado con éxito 💚") {
   let aviso = document.getElementById("mensaje-exito");
   if (!aviso) {
@@ -60,18 +54,24 @@ function mostrarMensaje(texto = "Agregado con éxito 💚") {
   setTimeout(() => aviso.classList.remove("visible"), 2500);
 }
 
-// 2) Crear tarjeta
+// --- Normalizador de rutas de imágenes ---
+function normImg(src) {
+  if (!src) return "";
+  const base = location.pathname.includes("/pages/")
+    ? "../assets/img/"
+    : "assets/img/";
+  if (src.startsWith("http")) return src;
+  if (src.includes("assets/img/"))
+    return src.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
+  return base + src.replace(/^.*img\//, "");
+}
+
+// --- Renderizado de tarjetas ---
 function crearTarjeta(p) {
   const art = document.createElement("div");
   art.className = "producto";
   art.dataset.id = p.id;
   art.dataset.cat = norm(p.categoria);
-
-  const imgBase = location.pathname.includes("/pages/") ? "../assets/img/" : "assets/img/";
-  const normImg = (src) =>
-    src?.startsWith("http") ? src :
-    src?.includes("/assets/img/") ? src :
-    imgBase + src.replace(/^.*img\//, "");
 
   art.innerHTML = `
     <h3>${p.nombre}</h3>
@@ -89,16 +89,17 @@ function renderCatalogo(lista) {
   const cont = document.getElementById("productos");
   if (!cont) return;
   cont.innerHTML = "";
-  lista.forEach(p => cont.appendChild(crearTarjeta(p)));
+  lista.forEach((p) => cont.appendChild(crearTarjeta(p)));
 }
 
+// --- Filtrado ---
 function filtrarPorCategoria(valor) {
   const catSel = norm(valor);
   if (catSel === "all" || catSel === "todas" || !catSel) {
     renderCatalogo(productos);
     return;
   }
-  const filtrados = productos.filter(p => {
+  const filtrados = productos.filter((p) => {
     const cats = splitCats(p.categoria);
     return cats.includes(catSel);
   });
@@ -111,17 +112,14 @@ function aplicarFiltro() {
   filtrarPorCategoria(valor);
 }
 
-function readProductos() {
-  try { return JSON.parse(localStorage.getItem("productos")) || datosProductos; }
-  catch { return datosProductos; }
-}
-
+// --- Inicialización general ---
 function initCatalogo() {
   renderCatalogo(productos);
 
   const params = new URLSearchParams(location.search);
   const catURL = params.get("cat");
   const sel = document.getElementById("categoria");
+
   if (catURL && sel) {
     sel.value = catURL;
     aplicarFiltro();
@@ -129,7 +127,6 @@ function initCatalogo() {
 
   if (sel) sel.addEventListener("change", aplicarFiltro);
 
-  // (Opcional) Botón "Aplicar"
   const btn = document.getElementById("aplicar");
   if (btn) btn.addEventListener("click", aplicarFiltro);
 
@@ -137,34 +134,34 @@ function initCatalogo() {
   if (cont) {
     cont.addEventListener("click", (e) => {
       const addBtn = e.target.closest(".btnCarrito");
+      const detBtn = e.target.closest(".btnDetalle");
+
       if (addBtn) {
         const card = addBtn.closest(".producto");
         const id = card?.dataset.id;
-        const prod = productos.find(x => String(x.id) === String(id));
+        const prod = productos.find((x) => String(x.id) === String(id));
         if (!prod) return;
 
         agregarAlCarrito({
           id: prod.id,
           nombre: prod.nombre,
           precio: prod.precio,
-          img: prod.img
+          img: prod.img,
         });
 
-        // ✅ Popup estilo Sabina
         avisarAgregado(prod.nombre);
         return;
       }
 
-      const detBtn = e.target.closest(".btnDetalle");
       if (detBtn) {
         const card = detBtn.closest(".producto");
         const id = card?.dataset.id;
-        if (id) {
-          const detalleBase = location.pathname.includes("/pages/")
-            ? "producto.html"
-            : "pages/producto.html";
-          location.href = `${detalleBase}?id=${id}`;
-        }
+        if (!id) return;
+
+        const detalleBase = location.pathname.includes("/pages/")
+          ? "producto.html"
+          : "pages/producto.html";
+        location.href = `${detalleBase}?id=${id}`;
       }
     });
   }

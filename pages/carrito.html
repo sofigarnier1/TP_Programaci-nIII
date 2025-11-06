@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-  
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <title>Carrito | Sabina Accesorios</title>
 </head>
+
 <body>
   <div class="page">
 
@@ -22,16 +22,15 @@
           </button>
 
           <div class="nav-links">
-            <a href="/index.html">Inicio</a>
-            <a href="/pages/productos.html">Productos</a>
-            <a href="/pages/contacto.html">Contactos</a>
-            <a href="/pages/carrito.html" id="nav-cart">🛒 (0)</a>
+            <!-- Desde /pages/ → rutas relativas -->
+            <a href="../index.html">Inicio</a>
+            <a href="productos.html">Productos</a>
+            <a href="contacto.html">Contactos</a>
+            <a href="carrito.html" id="nav-cart">🛒 (0)</a>
           </div>
-
         </div>
       </nav>
     </header>
-
 
     <!-- CONTENIDO -->
     <main>
@@ -46,16 +45,14 @@
           <!-- Tabla -->
           <div class="tabla-card">
             <table class="tabla">
-         <thead>
-  <tr>
-    <th>Producto</th>
-    <th class="num">Precio</th>
-    <th class="center">Cantidad</th>
-    <th class="num">Subtotal</th>
-  </tr>
-</thead>
-
-
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th class="num">Precio</th>
+                  <th class="center">Cantidad</th>
+                  <th class="num">Subtotal</th>
+                </tr>
+              </thead>
               <tbody id="cart-body"></tbody>
             </table>
 
@@ -77,24 +74,24 @@
             </div>
 
             <div class="resumen-actions">
-  <a class="btn btn-sec" href="/pages/productos.html">Seguir comprando</a>
-  <button id="btn-vaciar" class="btn btn-danger" type="button">Vaciar carrito</button>
-  <button id="btn-finalizar" class="btn btn-primary" type="button">Finalizar compra</button>
-</div>
-
+              <!-- Desde /pages/ → productos.html -->
+              <a class="btn btn-sec" href="productos.html">Seguir comprando</a>
+              <button id="btn-vaciar" class="btn btn-danger" type="button">Vaciar carrito</button>
+              <button id="btn-finalizar" class="btn btn-primary" type="button">Finalizar compra</button>
+            </div>
           </aside>
         </div>
       </section>
     </main>
 
     <!-- FOOTER full width -->
-<footer>
-  <div class="bar-inner">
-    <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
+    <footer>
+      <div class="bar-inner">
+        <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
+      </div>
+    </footer>
   </div>
-</footer>
 
-  <!-- Script del carrito -->
   <script type="module" src="../assets/js/carrito.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
