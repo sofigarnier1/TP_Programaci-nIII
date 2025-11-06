@@ -546,18 +546,19 @@ footer{
 
 nav {
   background: var(--accent, #7cee8bc9);
-  padding: 10px;
+  padding: 8px 12px;                /* un poco de aire, pero pegado */
   border-bottom: 1px solid var(--accent, #7cee8bc9);
 }
 
 /* contenedor interno */
 .bar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
+  /* SIN max-width, SIN margin auto */
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
+
 
 /* botón hamburguesa → SIEMPRE visible */
 .hamburger {

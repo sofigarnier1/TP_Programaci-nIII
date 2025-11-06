@@ -1,21 +1,51 @@
 import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-// =========================
-// Normalizar productos
-// =========================
+/* =========================
+   Normalizador de imágenes
+   ========================= */
+
+// Normaliza rutas de imágenes para que funcionen tanto en / como en /pages/
+function normImg(path) {
+  if (!path) return "";
+  let clean = String(path).trim();
+
+  // saco ./, / o ../ del principio
+  clean = clean.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
+  // ahora clean debería ser algo tipo: "assets/img/loquesea.png"
+
+  // si estoy en /pages/... necesito subir un nivel
+  const enSubcarpeta = location.pathname.includes("/pages/");
+  if (enSubcarpeta) {
+    return "../" + clean;
+  }
+  // si estoy en index (raíz del repo) va directo
+  return clean;
+}
+
+/* =========================
+   Productos + localStorage
+   ========================= */
+
 let productos =
   JSON.parse(localStorage.getItem("productos") || "null") || datosProductos;
 
+// Limpio y normalizo las rutas de imágenes para todos los productos
 productos = productos.map((p) => ({
   ...p,
+  // deja algo tipo "assets/img/..." (sin ./, / ni ../ adelante)
   img: (p.img || "")
-    .replace(/^\/+assets\//, "assets/")
-    .replace(/^(\.\.\/)+assets\//, "assets/"),
+    .trim()
+    .replace(/^(\.\/|\/)+/, "")
+    .replace(/^(\.\.\/)+/, ""),
   precio: Number(p.precio) || 0,
 }));
 
 localStorage.setItem("productos", JSON.stringify(productos));
+
+/* =========================
+   Utilidades de inicio
+   ========================= */
 
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
@@ -33,12 +63,9 @@ function tarjetaDestacada(p) {
   const art = document.createElement("div");
   art.className = "producto";
   art.dataset.id = p.id;
-
-  const img = p.img || "assets/img/placeholder.png";
-
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${img}" alt="${p.nombre}" height="400" width="400">
+    <img src="${normImg(p.img)}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -48,9 +75,9 @@ function tarjetaDestacada(p) {
   return art;
 }
 
-// =========================
-// Inicialización
-// =========================
+/* =========================
+   Inicialización
+   ========================= */
 
 function initIndex() {
   // 1) NAV: hamburguesa + toggle de menú
@@ -128,6 +155,7 @@ function initIndex() {
   });
 }
 
+// Disparo cuando cargue
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initIndex);
 } else {
