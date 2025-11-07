@@ -114,8 +114,6 @@ main { margin-top: 10px; }
   }
 }
 
-
-
 /* Etiquetas/filtros */
 #productos label {
   display:grid; grid-template-columns:auto auto;
@@ -389,7 +387,6 @@ input.qty {
   border-radius: 10px;
 }
 
-
 .btn-primary,
 .btn-danger {
   display: inline-flex;
@@ -489,9 +486,7 @@ footer .bar-inner p {
   -moz-appearance: none;
 
   /* Flecha SVG inline (negra con leve opacidad) */
-  background-image: url("data:image/svg+xml;utf8,\
-  <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.7'>\
-  <polyline points='6 9 12 15 18 9'/></svg>");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.7'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 14px;
@@ -523,7 +518,6 @@ footer .bar-inner p {
     width: 100%;
   }
 }
-
 
 /* Separar las tarjetas del footer */
 #productos{
@@ -558,7 +552,6 @@ nav {
   justify-content: space-between;
   width: 100%;
 }
-
 
 /* botón hamburguesa → SIEMPRE visible */
 .hamburger {
@@ -596,6 +589,7 @@ nav {
 }
 
 .nav-links a#nav-cart {
+  font-weight: bold;
   display: block;
   margin-left: auto;
 }
@@ -616,39 +610,97 @@ nav {
   padding: 10px 0;
 }
 
-/* el carrito también baja al menú cuando está abierto */
-.nav-links.active a#nav-cart {
-  margin-left: 0;
+.menu-hamburguesa a {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
 }
 
+.menu-hamburguesa a:hover {
+  text-decoration: underline;
+}
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
+nav {
+  background: var(--accent, #7cee8bc9);
+  padding: 8px 12px;                /* un poco de aire, pero pegado */
+  border-bottom: 1px solid var(--accent, #7cee8bc9);
+}
 
-  .nav-links {
-    position: absolute;
-    top: 56px;
-    left: 0;
-    right: 0;
-    background: var(--accent, #7cee8bc9);
-    padding: 12px 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+/* contenedor interno */
+.bar-inner {
+  /* SIN max-width, SIN margin auto */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
 
-    display: none;         /* oculto por defecto */
-  }
+/* botón hamburguesa → SIEMPRE visible */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
 
-  .nav-links.nav-open {
-    display: flex;         /* se muestra cuando JS agrega .nav-open */
-  }
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: #000;
+}
 
-  .nav-links a {
-    width: 100%;
-    padding: 8px 0;
-  }
+/* contenedor de links */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
 
-  .nav-links a#nav-cart {
-    margin-left: 0;
-  }
+/* por defecto SOLO se ve el carrito */
+.nav-links a {
+  display: none;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.nav-links a#nav-cart {
+  font-weight: bold;
+  display: block;
+  margin-left: auto;
+}
+
+/* cuando se abre el menú */
+.nav-links.active {
+  display: block;
+  position: absolute;
+  top: 41px;
+  left: 0;
+  right: 0;
+  background: var(--accent, #7cee8bc9);
+  padding: 15px;
+}
+
+.nav-links.active a {
+  display: block;
+  padding: 10px 0;
+}
+
+.menu-hamburguesa a {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.menu-hamburguesa a:hover {
+  text-decoration: underline;
+}
 }
