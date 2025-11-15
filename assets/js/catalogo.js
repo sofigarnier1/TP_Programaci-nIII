@@ -1,14 +1,4 @@
-// import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
-
-/*let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
-productos = productos.map((p) => ({
-  ...p,
-  precio: Number(p.precio) || 0,
-  categoria: (p.categoria || "").toString(),
-}));
-
-localStorage.setItem("productos", JSON.stringify(productos)); */
 
 const norm = (s = "") => s.toString().toLowerCase().trim();
 const splitCats = (s = "") =>
@@ -92,17 +82,6 @@ function aplicarFiltro() {
 }
 
 function initCatalogo() {
-  const hamburger = document.querySelector(".hamburger");
-  const navLinks = document.querySelector(".nav-links");
-
-  if (hamburger && navLinks) {
-    hamburger.addEventListener("click", () => {
-      const abierto = navLinks.classList.toggle("nav-open");
-      navLinks.classList.toggle("active", abierto);
-      hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
-    });
-  }
-
   let productos = [];
 
   fetch('../assets/data/productos.json')
@@ -167,7 +146,18 @@ function initCatalogo() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initCatalogo);
+  document.addEventListener("DOMContentLoaded", () => {
+    initCatalogo();
+
+    const hamburger = document.querySelector(".hamburger");
+    const navLinks = document.querySelector(".nav-links");
+    if (hamburger && navLinks) {
+      hamburger.addEventListener("click", () => {
+        const abierto = navLinks.classList.toggle("active");
+        hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
+      });
+  }
+  });
 } else {
   initCatalogo();
 }

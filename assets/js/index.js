@@ -1,9 +1,4 @@
-/* import { productos as datosProductos } from "./data.js"; */
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
-
-/* let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;          // lee el archivo productos
-productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
-localStorage.setItem("productos", JSON.stringify(productos)); */
 
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
@@ -94,17 +89,6 @@ function cargarDestacados() {
 let productos = [];
 
 function initIndex() {
-  const hamburger = document.querySelector(".hamburger");
-  const navLinks = document.querySelector(".nav-links");
-
-  if (hamburger && navLinks) {
-    hamburger.addEventListener("click", () => {
-      const isOpen = navLinks.classList.toggle("nav-open");
-      navLinks.classList.toggle("active", isOpen);
-      hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    });
-  }
-
   try {
     initCarrito();
   } catch (e) {
@@ -122,7 +106,19 @@ function initIndex() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initIndex);
+  document.addEventListener("DOMContentLoaded", () => {
+    initIndex();
+
+    const hamburger = document.querySelector(".hamburger");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (hamburger && navLinks) {
+      hamburger.addEventListener("click", () => {
+        const abierto = navLinks.classList.toggle("nav-open");
+        hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
+    });
+  }
+  });
 } else {
   initIndex();
 }

@@ -745,8 +745,8 @@ nav {
 @media (max-width: 768px) {
 nav {
   background: var(--accent, #7cee8bc9);
-  padding: 8px 12px;              
-  border-bottom: 1px solid var(--accent, #7cee8bc9);
+  padding: 9px 12px;              
+  border-bottom: 2px solid var(--accent, #7cee8bc9);
 }
 
 .bar-inner {
