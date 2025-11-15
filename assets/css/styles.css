@@ -55,9 +55,6 @@ main {
   padding:24px; 
 }
 
-/* =========================
-      LOGO fuera del nav
-   ========================= */
 .header-logo {
   background:#fff; 
   text-align:center;
@@ -81,9 +78,6 @@ main {
   margin-top: 10px; 
 }
 
-/* =========================
-             HERO
-   ========================= */
 #hero {
   display:flex; 
   flex-direction:column; 
@@ -104,9 +98,6 @@ main {
   margin:0; 
 }
 
-/* =========================
-          DESTACADOS
-   ========================= */
 #destacados {
   display:flex; 
   flex-wrap:wrap; 
@@ -128,9 +119,6 @@ main {
   max-width: max-content;
 }
 
-/* =========================
-      TITULARES de páginas
-   ========================= */
 #productos-titulo, #contactos-titulo, #carrito-titulo {
   margin: 0 auto;
   padding: 8px 16px;
@@ -229,9 +217,7 @@ main {
   transform: translateY(1px); 
 }
 
-/* =========================
-            FILTRO
-   ========================= */
+/* Filtro */
 #filtro {
   padding-bottom:16px;
   display:flex;
@@ -250,9 +236,7 @@ footer {
   color: #000;
 }
 
-/* =========================
-            CARRITO 
-   ========================= */
+/* Carrito */
 .carrito-grid { 
   display:grid; 
   grid-template-columns:1fr 320px; 
@@ -335,24 +319,6 @@ footer {
   font-variant-numeric:tabular-nums; 
 }
 
-.btn { 
-  background:var(--accent); 
-  border:1px solid var(--accent); 
-  color:#000; font-weight:700; 
-  padding:10px 12px; 
-  border-radius:10px; 
-  cursor:pointer; 
-}
-
-.btn-sec { 
-  display:inline-block; 
-  text-align:center; 
-  text-decoration:none; 
-  background:#fff; 
-  border:1px solid var(--accent); 
-  color:#000; 
-}
-
 .resumen-card h2 { 
   font-size:18px; 
   margin:8px 0 12px; 
@@ -372,9 +338,22 @@ footer {
 .resumen-actions { 
   display:flex; 
   flex-direction:column; 
-  gap:8px; 
-  margin-top:12px; 
+  gap:10px; 
+  margin-top:12px;
 }
+
+@media(min-width: 768px){ 
+.resumen-actions{ 
+  flex-direction:column; 
+} 
+}
+
+.resumen-actions .btn {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
 .vacio { 
   padding:18px; 
   background:var(--muted); 
@@ -386,33 +365,7 @@ footer {
   text-align:center; 
 }
 
-.plus, .btn-add { 
-  display:none; 
-}
-
-#mensaje-exito {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: #7cee8bc9;
-  color: #000;
-  font-weight: 600;
-  padding: 12px 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,.15);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.4s ease;
-  z-index: 9999;
-}
-
-#mensaje-exito.visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* ===== Detalle de producto ===== */
+/* Detalle del producto */
 .detalle-card {
   width: 100%;
   max-width: 520px;             
@@ -441,24 +394,10 @@ footer {
 }
 
 .detalle-info {
-  max-width: 420px;
-  margin: 0 auto;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-.detalle-actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-
-.detalle-info {
   max-width: 520px;
   margin: 0 auto;
   text-align: left;
+  font-size: 0.95rem;
 }
 
 .detalle-info p { 
@@ -472,8 +411,9 @@ footer {
 .detalle-actions {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 .detalle-actions .btn {
@@ -513,6 +453,7 @@ footer {
 .detalle-actions .btn-sec:hover {
   background: var(--cream-2, #fbf7f2);
 }
+
 .detalle-actions .btn-sec:active { 
   transform: translateY(1px); 
 }
@@ -561,30 +502,14 @@ footer {
 }
 
 input.qty {
-  width: 72px;
+  width: 72px;     
   text-align: center;
   padding: 6px 8px;
   border: 1px solid var(--border, #e6e6e6);
   border-radius: 10px;
 }
 
-.btn-primary, .btn-danger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border, #e6e6e6);
-  background: #fff;
-  color: #000;
-  border-radius: 12px;
-  padding: 10px 14px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.btn-primary:hover, .btn-danger:hover {
-  background: var(--accent, #7cee8bc9);
-}
-
+/* Botones Carrito */
 .btn { 
   display:inline-flex; 
   align-items:center; 
@@ -604,16 +529,12 @@ input.qty {
 .btn-sec { 
   background:#fff; 
   border-color:var(--border,#e6e6e6); 
+  color: #000;
+  text-decoration: none;
 }
 
-.btn-danger { 
-  background:#ffe9e9; 
-  border-color:#f3b8b8; 
-}
-
-.btn-primary { 
-  background:var(--accent,#7cee8b); 
-  border-color:var(--accent-strong,#70e686); 
+.btn-sec:hover{ 
+  background:#e6e6e6; 
 }
 
 .btn[disabled] { 
@@ -621,24 +542,26 @@ input.qty {
   cursor:not-allowed; 
 }
 
-.resumen-actions { 
-  display:flex; 
-  flex-direction:column; 
-  gap:10px; 
+.btn-primary {
+  background: var(--accent);
+  border:2px solid var(--accent-strong);
 }
 
-@media(min-width: 768px){ 
-.resumen-actions{ 
-  flex-direction:column; 
-} 
+.btn-primary:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
 }
 
-.resumen-actions .btn {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
+.btn-danger {
+  background:#ffe9e9;
+  border:2px solid #f3b8b8;
 }
 
+.btn-danger:hover {
+  background: #f3b8b8;
+}
+
+/* Footer */
 footer {
   background: var(--accent, #7cee8bc9);
   color: #000;
@@ -743,8 +666,8 @@ footer {
 @media (min-width: 768px) {
 nav {
   background: var(--accent, #7cee8bc9);
-  padding: 8px 12px;                
-  border-bottom: 1px solid var(--accent, #7cee8bc9);
+  padding: 9px 12px;                
+  border-bottom: 2px solid var(--accent, #7cee8bc9);
 }
 
 .bar-inner {

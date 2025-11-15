@@ -103,9 +103,12 @@ function initCatalogo() {
     });
   }
 
+  let productos = [];
+
   fetch('../assets/data/productos.json')
     .then(res => res.json())
     .then(data => {
+      productos = data;
       localStorage.setItem("productos", JSON.stringify(data));
       renderCatalogo(data);
     })
