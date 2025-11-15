@@ -12,18 +12,15 @@
 
 <body>
 
-  <!-- HEADER -->
   <header>
     <nav>
       <div class="bar-inner">
-        <!-- botón hamburguesa -->
         <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
 
         <div class = "menu-hamburguesa">
           <div class="nav-links">
-            <!-- Desde /pages/ usamos rutas relativas -->
             <a href="../index.html">Inicio</a>
             <a href="productos.html">Productos</a>
             <a href="contacto.html">Contactos</a>
@@ -34,43 +31,24 @@
     </nav>
   </header>
 
-  <!-- CONTENIDO -->
   <main>
     <section id="hero" class="container">
       <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
     </section>
 
-    <!-- Acá detalle.js va a inyectar el contenido -->
     <section id="detalleProducto" class="container">
-      <!-- contenido dinámico del producto -->
+
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer>
     <div class="bar-inner">
       <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
     </div>
   </footer>
 
-  <!-- Script de detalle (módulo) -->
   <script type="module" src="../assets/js/detalle.js"></script>
-  <!-- SweetAlert para mensajes (ej. agregado al carrito) -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- Hamburguesa: mismo comportamiento que en las otras páginas -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const hamburger = document.querySelector(".hamburger");
-      const navLinks = document.querySelector(".nav-links");
-      if (hamburger && navLinks) {
-        hamburger.addEventListener("click", () => {
-          const abierto = navLinks.classList.toggle("active");
-          hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
-        });
-      }
-    });
-  </script>
 
 </body>
 </html>

@@ -1,87 +1,9 @@
-import { productos as datosProductos } from "./data.js";
+/* import { productos as datosProductos } from "./data.js"; */
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-/* =========================
-   Normalizador de imágenes
-   ========================= */
-
-function normImg(path) {
-  if (!path) return "";
-  let clean = String(path).trim();
-
-  // limpio ./, / o ../ del principio
-  clean = clean.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
-
-  // Si ya viene con assets/ (assets/img/loquesea.jpeg), la dejo así
-  if (clean.startsWith("assets/")) {
-    return clean;
-  }
-
-  // Si viene como "img/aros.jpeg", le saco el "img/"
-  if (clean.startsWith("img/")) {
-    clean = clean.replace(/^img\//, "");
-  }
-
-  // Si viene solo "aros.jpeg", le agrego la carpeta correcta
-  return "assets/img/" + clean;
-}
-
-/* =========================
-   Productos + localStorage
-   ========================= */
-
-function cargarProductos() {
-  let base = null;
-
-  // Leo del localStorage si existe
-  try {
-    base = JSON.parse(localStorage.getItem("productos") || "null");
-  } catch {
-    base = null;
-  }
-
-  // Si no hay nada útil en LS, uso los del data.js
-  if (!Array.isArray(base) || base.length === 0) {
-    base = datosProductos;
-  }
-
-  // Limpio y normalizo las rutas + precio
-  const normalizados = base.map((p) => {
-    const precioNum = Number(p.precio) || 0;
-    const imgLimpia = (p.img || "")
-      .toString()
-      .trim()
-      .replace(/^(\.\/|\/)+/, "")
-      .replace(/^(\.\.\/)+/, ""); // dejo algo tipo "assets/img/..." o "aros.jpeg"
-
-    return {
-      ...p,
-      precio: precioNum,
-      img: imgLimpia,
-    };
-  });
-
-  // Guardo de nuevo en localStorage ya corregidos
-  localStorage.setItem("productos", JSON.stringify(normalizados));
-
-  // Debug: imprimo rutas en consola (podés borrar esto cuando ya confíes)
-  if (normalizados.length) {
-    console.log("Productos cargados en index:", normalizados);
-    normalizados.forEach((p) => {
-      console.log(
-        `Ruta normalizada: ${p.img} → src final: ${normImg(p.img)}`
-      );
-    });
-  }
-
-  return normalizados;
-}
-
-const productos = cargarProductos();
-
-/* =========================
-   Utilidades de inicio
-   ========================= */
+/* let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;          // lee el archivo productos
+productos = productos.map(p => ({ ...p, precio: Number(p.precio) || 0 }));
+localStorage.setItem("productos", JSON.stringify(productos)); */
 
 function tomarAleatorios(arr, n = 2) {
   const src = [...arr];
@@ -100,11 +22,9 @@ function tarjetaDestacada(p) {
   art.className = "producto";
   art.dataset.id = p.id;
 
-  const srcImg = normImg(p.img);
-
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${srcImg}" alt="${p.nombre}" height="400" width="400">
+    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${Number(p.precio).toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -114,42 +34,16 @@ function tarjetaDestacada(p) {
   return art;
 }
 
-/* =========================
-   Inicialización
-   ========================= */
+function cargarDestacados() {
+    const cont = document.getElementById("destacados");
+    if (!cont) return;
 
-function initIndex() {
-  // 1) NAV: hamburguesa + toggle de menú
-  const hamburger = document.querySelector(".hamburger");
-  const navLinks = document.querySelector(".nav-links");
+    const destacados = tomarAleatorios(productos, 2);
+    cont.innerHTML = "";
 
-  if (hamburger && navLinks) {
-    hamburger.addEventListener("click", () => {
-      // Clase principal que suele usar el CSS
-      const isOpen = navLinks.classList.toggle("nav-open");
-      // De paso mantenemos 'active' en sync por compatibilidad
-      navLinks.classList.toggle("active", isOpen);
-      hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    });
-  }
+    destacados.forEach((p) => cont.appendChild(tarjetaDestacada(p)));
 
-  // 2) Carrito (badge en el nav)
-  try {
-    initCarrito();
-  } catch (e) {
-    console.error("Error al inicializar carrito:", e);
-  }
-
-  // 3) DESTACADOS solo si existe #destacados (inicio)
-  const cont = document.getElementById("destacados");
-  if (!cont) return;
-
-  const destacados = tomarAleatorios(productos, 2);
-  cont.innerHTML = "";
-  destacados.forEach((p) => cont.appendChild(tarjetaDestacada(p)));
-
-  // Eventos de botones de las tarjetas
-  cont.addEventListener("click", (e) => {
+    cont.addEventListener("click", (e) => {
     const btnAdd = e.target.closest(".btnCarrito");
     if (btnAdd) {
       const card = btnAdd.closest(".producto");
@@ -197,7 +91,36 @@ function initIndex() {
   });
 }
 
-// Disparo cuando cargue
+let productos = [];
+
+function initIndex() {
+  const hamburger = document.querySelector(".hamburger");
+  const navLinks = document.querySelector(".nav-links");
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("nav-open");
+      navLinks.classList.toggle("active", isOpen);
+      hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+  }
+
+  try {
+    initCarrito();
+  } catch (e) {
+    console.error("Error al inicializar carrito:", e);
+  }
+
+  fetch('assets/data/productos.json')
+    .then(res => res.json())
+    .then(data => {
+      productos = data;
+      localStorage.setItem("productos", JSON.stringify(data));
+      cargarDestacados();
+    })
+    .catch(err => console.error("Error al cargar productos: ", err));
+}
+
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initIndex);
 } else {

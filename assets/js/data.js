@@ -1,7 +1,3 @@
-// ===========================
-// Catálogo base de productos
-// ===========================
-
 export const productos = [
   {
     id: 101,
@@ -10,7 +6,7 @@ export const productos = [
     categoria: "aros",
     precio: 6900,
     stock: 8,
-    img: "assets/img/aros.jpeg"
+    img: "/assets/img/aros.jpeg"
   },
   {
     id: 102,
@@ -19,7 +15,7 @@ export const productos = [
     categoria: "collares",
     precio: 8500,
     stock: 5,
-    img: "assets/img/cadema.jpeg" // se mantiene así para coincidir con la imagen existente
+    img: "/assets/img/cadema.jpeg"
   },
   {
     id: 103,
@@ -28,7 +24,7 @@ export const productos = [
     categoria: "anillos",
     precio: 4000,
     stock: 10,
-    img: "assets/img/anillos.jpeg"
+    img: "/assets/img/anillos.jpeg"
   },
   {
     id: 104,
@@ -37,7 +33,7 @@ export const productos = [
     categoria: "carteras",
     precio: 25000,
     stock: 5,
-    img: "assets/img/cartera.jpeg"
+    img: "/assets/img/cartera.jpeg"
   },
   {
     id: 105,
@@ -46,7 +42,7 @@ export const productos = [
     categoria: "carteras",
     precio: 28000,
     stock: 3,
-    img: "assets/img/cartera-gamuza.jpeg"
+    img: "/assets/img/cartera-gamuza.jpeg"
   },
   {
     id: 106,
@@ -55,7 +51,7 @@ export const productos = [
     categoria: "aros",
     precio: 7900,
     stock: 7,
-    img: "assets/img/aros-flor.jpeg"
+    img: "/assets/img/aros-flor.jpeg"
   },
   {
     id: 107,
@@ -64,7 +60,7 @@ export const productos = [
     categoria: "collares",
     precio: 12000,
     stock: 9,
-    img: "assets/img/collar-cielo.jpeg"
+    img: "/assets/img/collar-cielo.jpeg"
   },
   {
     id: 108,
@@ -73,6 +69,6 @@ export const productos = [
     categoria: "anillos",
     precio: 4200,
     stock: 7,
-    img: "assets/img/anillo-mariposa.jpeg"
+    img: "/assets/img/anillo-mariposa.jpeg"
   }
 ];

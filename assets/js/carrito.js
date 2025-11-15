@@ -1,4 +1,3 @@
-// === Utils ===
 function readCart() {
   try { return JSON.parse(localStorage.getItem("carrito") || "[]"); }
   catch { return []; }
@@ -7,7 +6,6 @@ function readCart() {
 function writeCart(items) {
   localStorage.setItem("carrito", JSON.stringify(items));
   updateBadges(items);
-  // mantener stock sincronizado cada vez que se escribe el carrito
   syncStocksWithCart();
 }
 
@@ -36,34 +34,21 @@ function writeProductos(list) {
   localStorage.setItem("productos", JSON.stringify(list));
 }
 
-/* =========================
-   Helpers de imágenes y stock
-   ========================= */
-
-// Normaliza la ruta de imagen (pensado para mostrarse en /pages/carrito.html)
 function sanImg(path) {
   if (!path) return "../assets/img/placeholder.png";
 
   let clean = String(path).trim();
-  // saco ./, / o ../
   clean = clean.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
 
-  // si ya viene con "assets/..."
   if (clean.startsWith("assets/")) {
-    // desde /pages/ necesitamos subir un nivel
     return "../" + clean;
   }
-
-  // si viene como "img/archivo.jpg"
   if (clean.startsWith("img/")) {
     clean = clean.replace(/^img\//, "");
   }
-
-  // si viene solo "archivo.jpg"
   return "../assets/img/" + clean;
 }
 
-// Ajusta el stock de un producto en localStorage
 function ajustarStockProducto(prodId, delta) {
   const productos = readProductos();
   if (!Array.isArray(productos) || !productos.length) return;
@@ -84,7 +69,6 @@ function ajustarStockProducto(prodId, delta) {
   writeProductos(productos);
 }
 
-// Agrega stockBase si falta (lo hace una sola vez)
 function ensureStockBase() {
   const prods = readProductos();
   let touched = false;
@@ -98,14 +82,12 @@ function ensureStockBase() {
   if (touched) writeProductos(prods);
 }
 
-// Cantidad en carrito de un producto
 function qtyInCart(prodId) {
   const c = readCart();
   const item = c.find(x => String(x.id) === String(prodId));
   return Number(item?.cantidad || 0);
 }
 
-// Recalcula p.stock = p.stockBase - qtyEnCarrito
 function syncStocksWithCart() {
   const prods = readProductos();
   let touched = false;
@@ -121,7 +103,6 @@ function syncStocksWithCart() {
   if (touched) writeProductos(prods);
 }
 
-// Restaura el stock “visible” a su base (usado al vaciar carrito)
 function restoreStocksToBase() {
   const prods = readProductos();
   let touched = false;
@@ -135,16 +116,13 @@ function restoreStocksToBase() {
   if (touched) writeProductos(prods);
 }
 
-// === API pública ===
 function agregarAlCarrito(prod) {
-  // prod: { id, nombre, precio (number), img }
   const prods = readProductos();
   const p = prods.find(x => String(x.id) === String(prod.id));
   const base = Number(p?.stockBase ?? p?.stock ?? Infinity);
   const enCarrito = qtyInCart(prod.id);
   const disponible = base - enCarrito;
   if (disponible <= 0) {
-    // sin stock disponible para agregar otro
     return;
   }
 
@@ -170,30 +148,28 @@ function agregarAlCarrito(prod) {
       cantidad: 1
     });
   }
-  writeCart(cart); // también sincroniza stocks
+  writeCart(cart); 
 }
 
 function actualizarBadge() { updateBadges(readCart()); }
 
 function initCarrito() {
-  ensureStockBase();    // crea stockBase si falta
-  syncStocksWithCart(); // ajusta stocks visibles según carrito actual
+  ensureStockBase(); 
+  syncStocksWithCart(); 
   actualizarBadge();
 
   window.addEventListener("storage", (e) => {
     if (e.key === "carrito") {
       actualizarBadge();
-      syncStocksWithCart(); // mantener sincronía entre pestañas
-      renderCart(); // reflejar cambios entre pestañas
+      syncStocksWithCart(); 
+      renderCart();      
     }
     if (e.key === "productos") {
-      // si cambió el catálogo, refrescar tabla
       renderCart();
     }
   });
 }
 
-// === Render versión SIMPLE (div#contCarrito) ===
 function mostrarCarrito() {
   const cont = document.getElementById("contCarrito");
   if (!cont) return;
@@ -229,7 +205,6 @@ function vaciarCarrito() {
     return;
   }
 
-  // devuelve stock por cada ítem del carrito
   const devolver = cart.reduce((acc, it) => {
     const id = String(it.id);
     acc[id] = (acc[id] || 0) + Number(it.cantidad || 1);
@@ -252,7 +227,6 @@ function renderCart() {
   const btnVaciar = document.getElementById("btn-vaciar");
   const btnFinalizar = document.getElementById("btn-finalizar");
 
-  // Si no están estos nodos, no es la versión tabla
   if (!tbody || !vacio || !itemsEl || !totalEl) return;
 
   const cart = readCart();
@@ -309,7 +283,6 @@ function renderCart() {
     tbody._boundRemove = true;
   }
 
-  // Botón Vaciar (con SweetAlert2)
   if (btnVaciar && !btnVaciar._bound) {
     btnVaciar.addEventListener("click", () => {
       if (typeof Swal === "undefined") {
@@ -374,7 +347,6 @@ function renderCart() {
         cart: c
       }));
 
-      // desde /pages/carrito.html → ruta relativa correcta
       window.location.href = "finalizar.html";
     });
     btnFinalizar._bound = true;
@@ -472,7 +444,6 @@ function renderCart() {
   }
 }
 
-// === Boot ===
 document.addEventListener("DOMContentLoaded", () => {
   initCarrito();
   mostrarCarrito();
@@ -482,12 +453,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const nav = document.querySelector(".nav-links");
   if (hamburger && nav) {
     hamburger.addEventListener("click", () => {
-      // igual que en index/productos: usamos 'active'
       const abierto = nav.classList.toggle("active");
       hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
     });
   }
 });
 
-// Export para usar desde catálogo o detalle
 export { initCarrito, agregarAlCarrito };

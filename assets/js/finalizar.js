@@ -1,4 +1,3 @@
-// Genera un código de pedido tipo SB-XXXXXX
 function genOrderCode(prefix = "SB-") {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let out = "";
@@ -8,10 +7,8 @@ function genOrderCode(prefix = "SB-") {
   return prefix + out;
 }
 
-// Lanza el modal "Compra confirmada" y hace cleanup + redirección
 function showCompraConfirmada(orderId) {
   if (typeof Swal === "undefined") {
-    // Fallback simple sin SweetAlert
     alert(`Compra confirmada. N° de pedido: ${orderId}`);
     localStorage.setItem("carrito", "[]");
     localStorage.removeItem("ordenPreview");
@@ -28,33 +25,27 @@ function showCompraConfirmada(orderId) {
     icon: "success",
     showCloseButton: true,
     confirmButtonText: "Aceptar",
-    confirmButtonColor: "#70e686", // Verde Sabina
+    confirmButtonColor: "#70e686", 
     background: "#fff",
     color: "#000",
     customClass: { popup: "sabina-success" },
     allowOutsideClick: false,
     allowEscapeKey: false,
   }).then(() => {
-    // limpiar carrito y preview de orden
     localStorage.setItem("carrito", "[]");
     localStorage.removeItem("ordenPreview");
-    // Si tenés restoreStocksToBase() disponible en este scope, podrías llamarla acá.
-    // restoreStocksToBase();
 
-    // Redirigir al catálogo (desde /pages/)
     window.location.href = "productos.html";
   });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Soporta tanto el id nuevo como el viejo por si quedó alguno
   const form =
     document.getElementById("checkoutForm") ||
     document.getElementById("formFinalizar");
 
   if (!form) return;
 
-  // Si existen estos campos, manejamos mostrar/ocultar dirección (envío/retiro)
   const entrega = document.getElementById("entrega");
   const bloqueDireccion = document.getElementById("bloqueDireccion");
   const direccion = document.getElementById("direccion");
@@ -86,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Validación nativa bootstrap-like
     if (!form.checkValidity()) {
       e.stopPropagation();
       form.classList.add("was-validated");

@@ -10,19 +10,15 @@
 </head>
 
 <body>
-
-  <!-- HEADER -->
   <header>
     <nav>
       <div class="bar-inner">
-        <!-- botón hamburguesa -->
         <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
         
         <div class = "menu-hamburguesa">
           <div class="nav-links">
-            <!-- Desde /pages/ siempre usamos rutas relativas -->
             <a href="../index.html">Inicio</a>
             <a href="productos.html">Productos</a>
             <a href="contacto.html">Contactos</a>
@@ -33,17 +29,14 @@
     </nav>
   </header>
 
-  <!-- CONTENIDO -->
   <main>
     <section id="hero" class="container">
       <img class="logo" src="../assets/img/4.png" alt="Logo Sabina Accesorios">
     </section>
 
-    <!-- Título -->
     <h1 id="productos-titulo">Productos en stock</h1>
 
-    <!-- Filtro por categoría -->
-    <section id="filtro" class="container">
+    <section id="filtro">
       <label for="categoria">Filtrar por categoría:</label>
       <select id="categoria">
         <option value="all">Todas</option>
@@ -54,53 +47,18 @@
       </select>
     </section>
 
-    <!-- Contenedor donde catalogo.js dibuja las cards -->
-    <section id="productos" class="container"></section>
+    <section id="productos" class="container">
+
+    </section>
   </main>
 
-  <!-- FOOTER -->
   <footer>
     <div class="bar-inner">
       <p>© 2025 Sabina Accesorios - Todos los derechos reservados.</p>
     </div>
   </footer>
 
-  <!-- Script principal del catálogo (módulo) -->
   <script type="module" src="../assets/js/catalogo.js"></script>
-
-  <!-- Script: filtro + menú hamburguesa -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Filtro por categoría
-      const select = document.getElementById("categoria");
-      const contenedor = document.getElementById("productos");
-
-      if (select && contenedor) {
-        select.addEventListener("change", () => {
-          const categoria = select.value;
-          const cards = contenedor.querySelectorAll(".producto");
-
-          cards.forEach(card => {
-            const cat = (card.dataset.cat || "").toLowerCase();
-            card.style.display =
-              categoria === "all" || cat === categoria ? "" : "none";
-          });
-        });
-      }
-
-      // Menú hamburguesa (misma lógica que en index)
-      const hamburger = document.querySelector(".hamburger");
-      const navLinks = document.querySelector(".nav-links");
-      if (hamburger && navLinks) {
-        hamburger.addEventListener("click", () => {
-          const abierto = navLinks.classList.toggle("active");
-          hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
-        });
-      }
-    });
-  </script>
-
-  <!-- SweetAlert2 (para avisar cuando se agrega al carrito) -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>

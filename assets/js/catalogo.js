@@ -1,21 +1,15 @@
-// =============================
-// Catálogo de productos Sabina
-// =============================
-
-import { productos as datosProductos } from "./data.js";
+// import { productos as datosProductos } from "./data.js";
 import { initCarrito, agregarAlCarrito } from "./carrito.js";
 
-// --- Normalización y carga inicial ---
-let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
+/*let productos = JSON.parse(localStorage.getItem("productos")) || datosProductos;
 productos = productos.map((p) => ({
   ...p,
   precio: Number(p.precio) || 0,
   categoria: (p.categoria || "").toString(),
 }));
 
-localStorage.setItem("productos", JSON.stringify(productos));
+localStorage.setItem("productos", JSON.stringify(productos)); */
 
-// --- Helpers ---
 const norm = (s = "") => s.toString().toLowerCase().trim();
 const splitCats = (s = "") =>
   norm(s)
@@ -23,7 +17,6 @@ const splitCats = (s = "") =>
     .map((x) => x.trim())
     .filter(Boolean);
 
-// --- Avisos visuales ---
 function avisarAgregado(nombre) {
   if (typeof Swal !== "undefined") {
     Swal.fire({
@@ -54,28 +47,14 @@ function mostrarMensaje(texto = "Agregado con éxito 💚") {
   setTimeout(() => aviso.classList.remove("visible"), 2500);
 }
 
-// --- Normalizador de rutas de imágenes ---
-function normImg(src) {
-  if (!src) return "";
-  const base = location.pathname.includes("/pages/")
-    ? "../assets/img/"
-    : "assets/img/";
-  if (src.startsWith("http")) return src;
-  if (src.includes("assets/img/"))
-    return src.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
-  return base + src.replace(/^.*img\//, "");
-}
-
-// --- Renderizado de tarjetas ---
 function crearTarjeta(p) {
   const art = document.createElement("div");
   art.className = "producto";
   art.dataset.id = p.id;
   art.dataset.cat = norm(p.categoria);
-
   art.innerHTML = `
     <h3>${p.nombre}</h3>
-    <img src="${normImg(p.img)}" alt="${p.nombre}" height="400" width="400">
+    <img src="${p.img}" alt="${p.nombre}" height="400" width="400">
     <p><strong>Precio:</strong> $ ${p.precio.toLocaleString("es-AR")}</p>
     <div class="botones">
       <button type="button" class="btnDetalle">Ver detalles</button>
@@ -88,14 +67,14 @@ function crearTarjeta(p) {
 function renderCatalogo(lista) {
   const cont = document.getElementById("productos");
   if (!cont) return;
+
   cont.innerHTML = "";
   lista.forEach((p) => cont.appendChild(crearTarjeta(p)));
 }
 
-// --- Filtrado ---
 function filtrarPorCategoria(valor) {
   const catSel = norm(valor);
-  if (catSel === "all" || catSel === "todas" || !catSel) {
+  if (catSel === "all" || catSel === "todas" || !catSel) {    
     renderCatalogo(productos);
     return;
   }
@@ -112,25 +91,26 @@ function aplicarFiltro() {
   filtrarPorCategoria(valor);
 }
 
-// --- Inicialización general ---
 function initCatalogo() {
-  // 1) NAV: hamburguesa + toggle de menú
   const hamburger = document.querySelector(".hamburger");
   const navLinks = document.querySelector(".nav-links");
 
   if (hamburger && navLinks) {
     hamburger.addEventListener("click", () => {
-      // misma lógica que en index.js
       const abierto = navLinks.classList.toggle("nav-open");
       navLinks.classList.toggle("active", abierto);
       hamburger.setAttribute("aria-expanded", abierto ? "true" : "false");
     });
   }
 
-  // 2) Render inicial del catálogo
-  renderCatalogo(productos);
+  fetch('../assets/data/productos.json')
+    .then(res => res.json())
+    .then(data => {
+      localStorage.setItem("productos", JSON.stringify(data));
+      renderCatalogo(data);
+    })
+    .catch(err => console.error("Error al cargar productos: ", err)) 
 
-  // 3) Filtro por categoría (select + botón Aplicar)
   const params = new URLSearchParams(location.search);
   const catURL = params.get("cat");
   const sel = document.getElementById("categoria");
@@ -145,7 +125,6 @@ function initCatalogo() {
   const btn = document.getElementById("aplicar");
   if (btn) btn.addEventListener("click", aplicarFiltro);
 
-  // 4) Clicks en tarjetas: agregar al carrito / ver detalle
   const cont = document.getElementById("productos");
   if (cont) {
     cont.addEventListener("click", (e) => {
@@ -181,12 +160,9 @@ function initCatalogo() {
       }
     });
   }
-
-  // 5) Badge del carrito y sincronización de stock
   initCarrito();
 }
 
-// Boot
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initCatalogo);
 } else {
