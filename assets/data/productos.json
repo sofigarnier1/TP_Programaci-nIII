@@ -6,7 +6,7 @@
     "categoria": "aros",
     "precio": 6900,
     "stock": 8,
-    "img": "/assets/img/aros.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/aros.jpeg"
   },
   {
     "id": 102,
@@ -15,7 +15,7 @@
     "categoria": "collares",
     "precio": 8500,
     "stock": 5,
-    "img": "/assets/img/cadema.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/cadema.jpeg"
   },
   {
     "id": 103,
@@ -24,7 +24,7 @@
     "categoria": "anillos",
     "precio": 4000,
     "stock": 10,
-    "img": "/assets/img/anillos.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/anillos.jpeg"
   },
   {
     "id": 104,
@@ -33,7 +33,7 @@
     "categoria": "carteras",
     "precio": 25000,
     "stock": 5,
-    "img": "/assets/img/cartera.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/cartera.jpeg"
   },
   {
     "id": 105,
@@ -42,7 +42,7 @@
     "categoria": "carteras",
     "precio": 28000,
     "stock": 3,
-    "img": "/assets/img/cartera-gamuza.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/cartera-gamuza.jpeg"
   },
   {
     "id": 106,
@@ -51,7 +51,7 @@
     "categoria": "aros",
     "precio": 7900,
     "stock": 7,
-    "img": "/assets/img/aros-flor.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/aros-flor.jpeg"
   },
   {
     "id": 107,
@@ -60,7 +60,7 @@
     "categoria": "collares",
     "precio": 12000,
     "stock": 9,
-    "img": "/assets/img/collar-cielo.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/collar-cielo.jpeg"
   },
   {
     "id": 108,
@@ -69,6 +69,6 @@
     "categoria": "anillos",
     "precio": 4200,
     "stock": 7,
-    "img": "/assets/img/anillo-mariposa.jpeg"
+    "img": "/TP_Programaci-nIII/assets/img/anillo-mariposa.jpeg"
   }
 ]
