@@ -1,19 +1,6 @@
 import { agregarAlCarrito, initCarrito } from "./carrito.js";
 import { productos as datosProductos } from "./data.js";
 
-function resolveImg(src = "") {
-  if (src.includes("../assets/")) return src;
-  if (src.includes("assets/")) {
-    return "../" + src.replace(/^\.?\//, "");
-  }
-  return (
-    "../assets/img/" +
-    src
-      .replace(/^\/+/, "")
-      .replace(/^(\.\.\/)+/, "")
-  );
-}
-
 function getIdFromURL() {
   const params = new URLSearchParams(location.search);
   return params.get("id");
@@ -49,14 +36,6 @@ function avisarAgregado(nombre) {
   }
 }
 
-function readCart() {
-  try {
-    return JSON.parse(localStorage.getItem("carrito") || "[]");
-  } catch {
-    return [];
-  }
-}
-
 function readProductos() {
   try {
     const guardados = JSON.parse(localStorage.getItem("productos") || "null");
@@ -86,7 +65,7 @@ function renderDetalle() {
   cont.innerHTML = `
     <article class="detalle-card">
       <h1>${prod.nombre}</h1>
-      <img class="detalle-img" src="${resolveImg(prod.img)}" alt="${prod.nombre}">
+      <img class="detalle-img" src="${prod.img}" alt="${prod.nombre}">
       <div class="detalle-info">
         <p><strong>Precio:</strong> $ ${Number(prod.precio || 0).toLocaleString("es-AR")}</p>
         <p><strong>Material:</strong> ${materialTxt}</p>
