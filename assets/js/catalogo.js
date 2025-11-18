@@ -81,9 +81,9 @@ function aplicarFiltro() {
   filtrarPorCategoria(valor);
 }
 
-function initCatalogo() {
-  let productos = [];
+ let productos = [];
 
+function initCatalogo() {
   fetch('../assets/data/productos.json')
     .then(res => res.json())
     .then(data => {
