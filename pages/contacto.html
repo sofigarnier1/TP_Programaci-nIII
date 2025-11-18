@@ -148,6 +148,37 @@
         </div>
       </div>
     </div>
+
+    <script>
+      function mostrarMensaje(texto) {
+        let aviso = document.getElementById("mensaje-exito");
+        if (!aviso) {
+          aviso = document.createElement("div");
+          aviso.id = "mensaje-exito";
+          document.body.appendChild(aviso);
+        }
+        aviso.textContent = texto;
+        aviso.classList.add("visible");
+        setTimeout(() => aviso.classList.remove("visible"), 2500);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("contactForm");
+
+      form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.classList.add("was-validated");
+        return;
+      }
+
+      form.classList.add("was-validated");
+      if (typeof mostrarMensaje === "function") {
+      mostrarMensaje("¡Tu consulta fue enviada correctamente! 💌");
+      }});
+      });
+    </script>
   </main>
 
   <footer>
