@@ -34,21 +34,6 @@ function writeProductos(list) {
   localStorage.setItem("productos", JSON.stringify(list));
 }
 
-function sanImg(path) {
-  if (!path) return "../assets/img/placeholder.png";
-
-  let clean = String(path).trim();
-  clean = clean.replace(/^(\.\/|\/)+/, "").replace(/^(\.\.\/)+/, "");
-
-  if (clean.startsWith("assets/")) {
-    return "../" + clean;
-  }
-  if (clean.startsWith("img/")) {
-    clean = clean.replace(/^img\//, "");
-  }
-  return "../assets/img/" + clean;
-}
-
 function ajustarStockProducto(prodId, delta) {
   const productos = readProductos();
   if (!Array.isArray(productos) || !productos.length) return;
@@ -144,7 +129,7 @@ function agregarAlCarrito(prod) {
       id: prod.id,
       nombre: prod.nombre,
       precio: Number(prod.precio) || 0,
-      img: sanImg(prod.img || ""),
+      img: prod.img,
       cantidad: 1
     });
   }
@@ -198,27 +183,6 @@ function mostrarCarrito() {
   cont.appendChild(pTotal);
 }
 
-function vaciarCarrito() {
-  const cart = readCart();
-  if (!cart.length) {
-    updateBadges([]);
-    return;
-  }
-
-  const devolver = cart.reduce((acc, it) => {
-    const id = String(it.id);
-    acc[id] = (acc[id] || 0) + Number(it.cantidad || 1);
-    return acc;
-  }, {});
-
-  Object.entries(devolver).forEach(([id, qty]) => {
-    ajustarStockProducto(id, +qty);
-  });
-
-  writeCart([]);
-  updateBadges([]);
-}
-
 function renderCart() {
   const tbody = document.getElementById("cart-body");
   const vacio = document.getElementById("cart-empty");
@@ -246,13 +210,12 @@ function renderCart() {
     const precio = Number(p.precio) || 0;
     const qty = Math.max(1, Number(p.cantidad || 1));
     const subtotal = precio * qty;
-    const img = sanImg(p.img || "");
 
     return `
       <tr data-id="${String(p.id)}">
         <td>
           <div class="prod">
-            <img src="${img}" alt="${p.nombre || "Producto"}">
+            <img src="${p.img}" alt="${p.nombre || "Producto"}">
             <div class="prod-info">
               <div class="name">${p.nombre || "Producto"}</div>
               <button class="btn btn-mini btn-remove" type="button"
